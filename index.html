@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Formulário - Spray Peniano</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e0e7f0 0%, #d0d9e4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .form-container {
+            background: white;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 2rem;
+            padding: 2rem 1.8rem 2.5rem;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #075e54;
+            margin-bottom: 0.3rem;
+        }
+
+        .sub {
+            color: #4b5e6c;
+            border-left: 3px solid #25d366;
+            padding-left: 12px;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .campo {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #1f2e35;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        input {
+            padding: 12px 16px;
+            border: 1.5px solid #cfdfe8;
+            border-radius: 20px;
+            font-size: 1rem;
+            transition: 0.2s;
+            background-color: #fefefe;
+            outline: none;
+            width: 100%;
+        }
+
+        input:focus {
+            border-color: #25d366;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2);
+        }
+
+        button {
+            background-color: #25d366;
+            border: none;
+            width: 100%;
+            padding: 14px 0;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background-color: #1da55a;
+        }
+
+        .aviso {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #5f7c8a;
+            background: #eff3f6;
+            padding: 8px;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Formulário de contacto</h1>
+    <div class="sub">Preencha os dados abaixo e confirme para enviar via WhatsApp</div>
+
+    <form id="formContato">
+        <div class="campo">
+            <label>👤 Nome completo *</label>
+            <input type="text" id="nome" placeholder="Ex: Amélia Langa" required>
+        </div>
+
+        <div class="campo">
+            <label>🏠 Endereço *</label>
+            <input type="text" id="endereco" placeholder="Bairro, rua, número, etc." required>
+        </div>
+
+        <div class="campo">
+            <label>📱 Número de contacto (WhatsApp) *</label>
+            <input type="tel" id="contato" placeholder="Ex: 258834413024" required>
+        </div>
+
+        <button type="submit">📲 Confirmar o pedido</button>
+        <div class="aviso">🔐 Ao confirmar, você enviará: "Olá! Gostaria de comprar o Spray Peniano" + seus dados.</div>
+    </form>
+</div>
+
+<script>
+    // NÚMERO DO WHATSAPP QUE VAI RECEBER OS DADOS (SEU)
+    const NUMERO_DESTINO = "258834413024";
+
+    document.getElementById('formContato').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nome = document.getElementById('nome').value.trim();
+        const endereco = document.getElementById('endereco').value.trim();
+        const contato = document.getElementById('contato').value.trim();
+
+        if (nome === "") {
+            alert("⚠️ Por favor, informe o seu nome.");
+            document.getElementById('nome').focus();
+            return;
+        }
+        if (endereco === "") {
+            alert("⚠️ Por favor, informe o seu endereço.");
+            document.getElementById('endereco').focus();
+            return;
+        }
+        if (contato === "") {
+            alert("⚠️ Por favor, informe o seu número de contacto (WhatsApp).");
+            document.getElementById('contato').focus();
+            return;
+        }
+
+        // Validação básica do número
+        const numeros = contato.replace(/\D/g, '');
+        if (numeros.length < 9) {
+            alert("📵 Número de contacto inválido. Use o código do país (258) + número, ex: 258834413024");
+            document.getElementById('contato').focus();
+            return;
+        }
+
+        // Mensagem fixa + dados preenchidos
+        let texto = `Olá! Gostaria de comprar o Spray Peniano%0a%0a`;
+        texto += `*Nome:* ${encodeURIComponent(nome)}%0a`;
+        texto += `*Endereço:* ${encodeURIComponent(endereco)}%0a`;
+        texto += `*WhatsApp dele(a):* ${encodeURIComponent(contato)}%0a`;
+
+        const url = `https://wa.me/${NUMERO_DESTINO}?text=${texto}`;
+        window.open(url, '_blank');
+    });
+</script>
+</body>
+</html>
