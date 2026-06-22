@@ -1074,18 +1074,15 @@
     //  DADOS INICIAIS (FORÇA RECRIAÇÃO)
     // ================================================================
     function initDatabase() {
-        // Forçar recriação dos dados para garantir que as contas padrão existem
         const defaultUsers = [
             { id: 'admin1', name: 'Administrador', email: 'admin@mozfilmes.com', password: 'Admin123!', phone: '870544332', isAdmin: true, plan: null, planExpiry: null },
             { id: 'user1', name: 'Joaquim Duarte', email: 'joaquim@mozfilmes.com', password: '123456', phone: '841234567', isAdmin: false, plan: null, planExpiry: null },
             { id: 'user2', name: 'Amigo', email: 'amigo@mozfilmes.com', password: '123456', phone: '842345678', isAdmin: false, plan: null, planExpiry: null }
         ];
 
-        // Se não houver utilizadores, cria os padrão
         if (!localStorage.getItem('moz_users')) {
             localStorage.setItem('moz_users', JSON.stringify(defaultUsers));
         } else {
-            // Verifica se o admin existe, senão adiciona
             let users = JSON.parse(localStorage.getItem('moz_users'));
             const adminExists = users.some(u => u.email === 'admin@mozfilmes.com');
             if (!adminExists) {
@@ -1094,7 +1091,6 @@
             }
         }
 
-        // Filmes
         const defaultMovies = [
             { id: 'd1', title: 'Winter is Coming', poster: 'https://picsum.photos/seed/got1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 1, group: '' },
             { id: 'd2', title: 'The Kingsroad', poster: 'https://picsum.photos/seed/got2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 2, group: '' },
@@ -1119,24 +1115,29 @@
     initDatabase();
 
     // ================================================================
-    //  CONTROLO DO MENU
+    //  CONTROLO DO MENU (CORRIGIDO)
     // ================================================================
     function updateMenuVisibility() {
         const user = getCurrentUser();
         const bottomNav = document.getElementById('bottomNav');
         const currentPage = document.querySelector('.page.active');
-        if (bottomNav) {
-            // Se estiver na página de login ou registo, oculta sempre
-            if (currentPage && (currentPage.id === 'page-login' || currentPage.id === 'page-register')) {
-                bottomNav.classList.remove('show');
-                return;
-            }
-            // Caso contrário, mostra apenas se houver utilizador
-            if (user) {
-                bottomNav.classList.add('show');
-            } else {
-                bottomNav.classList.remove('show');
-            }
+        
+        if (!bottomNav) return;
+
+        // Se estiver na página de login ou registo, oculta sempre
+        if (currentPage && (currentPage.id === 'page-login' || currentPage.id === 'page-register')) {
+            bottomNav.classList.remove('show');
+            console.log('Menu oculto (login/registo)');
+            return;
+        }
+
+        // Caso contrário, mostra apenas se houver utilizador logado
+        if (user) {
+            bottomNav.classList.add('show');
+            console.log('Menu visível (utilizador logado)');
+        } else {
+            bottomNav.classList.remove('show');
+            console.log('Menu oculto (sem utilizador)');
         }
     }
 
