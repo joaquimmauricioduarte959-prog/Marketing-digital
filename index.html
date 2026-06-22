@@ -1,133 +1,1489 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-MZ">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>marketing digital</title>
-  <style>
-          * { margin: 0;
-          padding: 0;
-          box-sizing: border-box;}
-   body{
-             background: darkviolet;
-              width: 100%;
-              
-               }
-               
-    iframe{display: flex;
-                   display: block;                  
-                  justify-content: center; 
-           display: table;
-           margin: 5px auto; }
-                 
-    header{
-                   background: purple;
-                   color:gold;
-                   padding:20px;
-                   width: 100%;
-                  box-sizing: border-box;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MOZFilmes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="manifest" href='data:application/json,{"name":"MOZFilmes","short_name":"MOZFilmes","start_url":".","display":"standalone","background_color":"#0a0a0a","theme_color":"#00b894","icons":[{"src":"data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\".9em\" font-size=\"90\">🎬</text></svg>","sizes":"any","type":"image/svg+xml"}]}'>
+    <style>
+        /* ========== RESET E ESTILOS GLOBAIS ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #app {
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            max-height: 850px;
+            background-color: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+        .page {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px 16px;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+        .page.active { display: flex; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #1c1c1e; }
+        ::-webkit-scrollbar-thumb { background: #00b894; border-radius: 10px; }
 
-     h1{      display: flex;
-                  justify-content: center; 
-    }   
-       section{ 
-                    background-color: violet;
-                    color: white;
-                    margin: 5px 10px;
-                    border-radius: 25px;
-                    padding: 10px 25px 10px 25px;                    
-                  ;} 
-                  
-    
- .formato-acesso{ 
-                   background-color: black;
-                   color:white;
-                   font-size: 25px;
-                   box-sizing:border-box;
-                   
-                   margin: 5px 10px;
-                   }
-                   
-   .conteudo-programatico-resumido{background-color:purple;}
-   
-            
-    
-           a { 
-           background-color: blue;
-           color: black;
-           font-size:30px;
-           padding: 10px 15px;
-           border-radius: 30px;
-           display: flex;
-           justify-content: center; 
-           display: table;
-           margin: 5px auto;
-           text-decoration:none;
-           box-shadow: ;}
-          
-           
-  </style>
+        /* ========== LOGIN / REGISTO ========== */
+        #page-login, #page-register {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(145deg, #0a0a0a 0%, #141414 100%);
+            padding: 30px;
+        }
+        .auth-box { width: 100%; max-width: 340px; }
+        .auth-box h1 { font-size: 38px; color: #00b894; margin-bottom: 8px; letter-spacing: -1px; }
+        .auth-box h1 i { margin-right: 8px; }
+        .auth-box p.sub { color: #888; margin-bottom: 30px; font-size: 14px; }
+        .auth-box input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            background: #1c1c1e;
+            border: 1px solid #2c2c2e;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .auth-box input:focus { border-color: #00b894; }
+        .auth-box input::placeholder { color: #666; }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #00b894;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        .btn-primary:active { background: #008a6e; transform: scale(0.97); }
+        .auth-switch { color: #888; margin-top: 18px; font-size: 14px; text-align: center; }
+        .auth-switch a { color: #00b894; font-weight: 600; text-decoration: none; }
+
+        /* ========== HEADER ========== */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 16px 0;
+            flex-shrink: 0;
+        }
+        .app-header h2 { font-size: 22px; color: #fff; cursor: pointer; }
+        .app-header h2 i { color: #00b894; margin-right: 6px; }
+        .app-header .badge {
+            background: #2c2c2e;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #aaa;
+        }
+        .app-header .badge i { color: #f1c40f; margin-right: 4px; }
+
+        /* ========== PESQUISA ========== */
+        .search-bar {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1c1c1e;
+            border: 1px solid #2c2c2e;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .search-bar:focus { border-color: #00b894; }
+        .search-bar::placeholder { color: #666; }
+
+        /* ========== CATEGORIAS ========== */
+        .category-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 8px 0 12px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            flex-shrink: 0;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .category-pill {
+            background: #1c1c1e;
+            border: 1px solid #2c2c2e;
+            color: #aaa;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .category-pill:active { transform: scale(0.95); }
+        .category-pill.active {
+            background: #00b894;
+            border-color: #00b894;
+            color: #fff;
+        }
+        .category-label {
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 0;
+            flex-shrink: 0;
+        }
+
+        /* ========== FILMES ========== */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .movie-card {
+            background: #1c1c1e;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.15s;
+            cursor: pointer;
+            position: relative;
+        }
+        .movie-card:active { transform: scale(0.96); }
+        .movie-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #2c2c2e;
+        }
+        .movie-card .info { padding: 10px 10px 12px; }
+        .movie-card .info h4 {
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .movie-card .info .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+        }
+        .movie-card .info .meta span {
+            font-size: 10px;
+            color: #00b894;
+            background: #004d3d;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .movie-card .info .meta .country-flag { font-size: 14px; }
+        .movie-card .fav-icon {
+            font-size: 16px;
+            cursor: pointer;
+            color: #888;
+            transition: 0.2s;
+        }
+        .movie-card .fav-icon.active { color: #e74c3c; }
+
+        .movie-card .premium-lock {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.7);
+            color: #f1c40f;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            backdrop-filter: blur(4px);
+        }
+        .movie-card .premium-lock i { font-size: 12px; }
+        .movie-card .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            gap: 6px;
+            backdrop-filter: blur(2px);
+        }
+        .movie-card .premium-overlay i { font-size: 30px; color: #f1c40f; }
+        .movie-card .premium-overlay span {
+            font-size: 12px;
+            color: #fff;
+            font-weight: 600;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .section-title {
+            color: #aaa;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 6px 0 4px 0;
+        }
+        .featured-banner {
+            background: linear-gradient(90deg, #1c1c1e, #004d3d);
+            border-radius: 16px;
+            padding: 18px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .featured-banner .text h3 { font-size: 16px; }
+        .featured-banner .text p { font-size: 12px; color: #aaa; }
+        .featured-banner .tag {
+            background: #00b894;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* ========== PLANOS ========== */
+        .plan-card {
+            background: #1c1c1e;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 14px;
+            border: 1px solid #2c2c2e;
+        }
+        .plan-card:active { border-color: #00b894; }
+        .plan-card .top { display: flex; justify-content: space-between; align-items: center; }
+        .plan-card .top h3 { font-size: 18px; }
+        .plan-card .price { font-size: 22px; font-weight: 700; color: #00b894; }
+        .plan-card .price small { font-size: 13px; font-weight: 400; color: #888; }
+        .plan-card .desc { color: #aaa; font-size: 14px; margin: 6px 0 12px 0; }
+        .btn-plan {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid #00b894;
+            border-radius: 10px;
+            color: #00b894;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-plan:active { background: #00b894; color: #fff; }
+
+        /* ========== CHECKOUT ========== */
+        .checkout-box {
+            background: #1c1c1e;
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 10px;
+        }
+        .checkout-box .receiver-info {
+            background: #004d3d;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 16px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .checkout-box .receiver-info strong { font-size: 18px; color: #f1c40f; }
+        .checkout-box .amount-display {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: #00b894;
+            margin: 6px 0 4px;
+        }
+        .checkout-box .label { color: #888; font-size: 14px; text-align: center; margin-bottom: 20px; }
+        .checkout-box input, .checkout-box select {
+            width: 100%;
+            padding: 14px;
+            background: #0a0a0a;
+            border: 1px solid #2c2c2e;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 16px;
+            outline: none;
+        }
+        .checkout-box input:focus, .checkout-box select:focus { border-color: #00b894; }
+        .checkout-box select option { background: #1c1c1e; }
+        .qr-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 16px 0;
+            padding: 16px;
+            background: #0a0a0a;
+            border-radius: 16px;
+            border: 1px dashed #2c2c2e;
+        }
+        .qr-area .ref { color: #888; font-size: 12px; margin-top: 8px; word-break: break-all; text-align: center; }
+        .btn-success {
+            width: 100%;
+            padding: 14px;
+            background: #f1c40f;
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .btn-success:active { background: #d4a800; transform: scale(0.97); }
+        .btn-danger {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid #e74c3c;
+            border-radius: 12px;
+            color: #e74c3c;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* ========== PERFIL ========== */
+        .profile-card {
+            background: #1c1c1e;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-card .avatar {
+            font-size: 60px;
+            color: #00b894;
+            background: #0a0a0a;
+            width: 80px;
+            height: 80px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+        .profile-card h3 { font-size: 20px; }
+        .profile-card p { color: #aaa; font-size: 14px; }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #2c2c2e;
+            color: #ccc;
+        }
+        .info-row .label { color: #888; }
+        .status-badge {
+            background: #00b894;
+            color: #fff;
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.expired { background: #e74c3c; }
+
+        /* ========== MENU INFERIOR ========== */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #141414;
+            border-top: 1px solid #2c2c2e;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 12px;
+            backdrop-filter: blur(10px);
+            z-index: 99;
+        }
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            font-size: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px 12px;
+        }
+        .bottom-nav .nav-item i { font-size: 22px; margin-bottom: 2px; }
+        .bottom-nav .nav-item.active { color: #00b894; }
+
+        /* ========== ADMIN ========== */
+        #admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 999;
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+        #admin-panel h2 { color: #00b894; }
+        #admin-panel input, #admin-panel select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1c1c1e;
+            border: 1px solid #2c2c2e;
+            border-radius: 8px;
+            color: #fff;
+        }
+        #admin-panel select option { background: #1c1c1e; }
+        #admin-panel .admin-close {
+            float: right;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #admin-panel .admin-save {
+            width: 100%;
+            padding: 14px;
+            background: #00b894;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #admin-panel .admin-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            color: #aaa;
+        }
+        #admin-panel .admin-checkbox input {
+            width: 20px;
+            height: 20px;
+            accent-color: #00b894;
+            margin: 0;
+        }
+        .admin-movie-item {
+            background: #1c1c1e;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+        .admin-movie-item button {
+            background: #e74c3c;
+            border: none;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* ========== PLAYER ========== */
+        #video-player-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #video-player-modal .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        #video-player-modal video {
+            width: 100%;
+            max-height: 70vh;
+            background: #000;
+        }
+        #video-player-modal .player-info {
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+            min-height: 80px;
+        }
+        #video-player-modal .player-info h3 { color: #fff; margin-bottom: 5px; }
+        #video-player-modal .player-info p { color: #aaa; font-size: 14px; margin: 0; }
+        #video-player-modal .player-info .btn-primary {
+            width: auto;
+            padding: 8px 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 10px;
+            background: #00b894;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ========== MODAL DE AVISO PREMIUM ========== */
+        #premium-warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1002;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+        }
+        #premium-warning-modal .modal-box {
+            background: #1c1c1e;
+            border-radius: 20px;
+            padding: 30px 24px;
+            max-width: 340px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #2c2c2e;
+        }
+        #premium-warning-modal .modal-box i {
+            font-size: 50px;
+            color: #f1c40f;
+            margin-bottom: 12px;
+        }
+        #premium-warning-modal .modal-box h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        #premium-warning-modal .modal-box p {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        #premium-warning-modal .modal-box .btn-primary {
+            margin-top: 0;
+        }
+        #premium-warning-modal .modal-box .btn-close-modal {
+            background: transparent;
+            border: 1px solid #666;
+            color: #aaa;
+            padding: 10px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* ========== UTILITÁRIOS ========== */
+        .hidden { display: none !important; }
+        .mt-10 { margin-top: 10px; }
+        .text-center { text-align: center; }
+        .toast {
+            background: #1c1c1e;
+            padding: 12px 18px;
+            border-radius: 12px;
+            color: #fff;
+            margin-bottom: 12px;
+            border-left: 4px solid #00b894;
+            font-size: 14px;
+        }
+        .toast.error { border-left-color: #e74c3c; }
+    </style>
 </head>
 <body>
-   <header>
-   
-       <h1>PRoToCoLo MZN</h1>
-        <iframe src="https://www.youtube.com/embed/m98-2Rp1hzM" frameborder="0" allowfullscreen></iframe>
- </header>
-       <a href="https://pay.kambafy.com/checkout/bb075c9e-afe1-42c8-bd9a-6e23c8c9ab12">quero meu acesso</a>
-  
-   <main>
-  
-      <section class="formato-acesso">
-      
-         <h2>Formato e acesso</h2>
-             <ul>
-               <li>Plataforma própria (acesso via computador ou app)</li>
-                <li>50+ horas de vídeo divididas em módulos curtos (5 a 15 minutos cada)</li>
-               <li>Legendas e material de apoio (PDF, planilhas, checklists)</li>
-               <li>Acesso vitalício – incluindo todas as futuras atualizações
-               <li>Certificado de conclusão (válido como horas extracurriculares)</li>
-           </ul>
-  
-      </section>
-    
-     <section class="conteudo-programatico-resumido" >
 
-          <h1>Conteúdo programático resumido:</h1>
-             <ul>
-                  <li>Fundamentos do marketing digital – jornada do cliente, persona, funil de vendas</li>
-                  <li>Tráfego pago – Google Ads, Meta Ads (Facebook/Instagram), pixel, remarketing</li>
-                  <li>Tráfego orgânico – SEO básico, blog, YouTube e redes sociais</li>
-                  <li>E-mail marketing e automação – ferramentas (Mailchimp, RD Station), sequências</li>
-                  <li>Copywriting e vendas – gatilhos mentais, estrutura de anúncios e landing pages</li>
-                  <li>Analytics e métricas – Google Analytics, métricas de ROI, CPA, ROAS</li>
-                   <li>Projetos práticos – como encontrar primeiros clientes, precificação, portfólio</li>
-                   <li>Mentorias ao vivo – 1 encontro por semana para tirar dúvidas e acompanhar cases</li>
-                <ul>
-                
-   </section>
-   
-   <section class="bonus">
-  
-            <h2>Bônus inclusos (sem custo extra)</h2>
-                  
-                 <ul>
-                   <li>Bônus 1: E-book "50 ideias de nichos lucrativos para iniciantes"</p>
-                  <li>Bônus 2: Planilha de precificação de serviços (freelas e agência)</p>
-                   <li>Bônus 3: Acesso a um grupo privado no WhatsApp com alunos e mentores</p>
-                  <li>Bônus 4: Webinar mensal sobre tendências (lançado ao vivo, fica gravado)</p>
-                 <ul>
-                 
-   </section>
-   <section class="para quem">
-           <h2>Para quem é indicado:</h2>
-                <li>· Iniciantes que nunca fizeram um anúncio online</p>
-                <li>· Profissionais de outras áreas querendo migrar para marketing digital</p>
-               <li>· Estudantes que buscam primeiro emprego na área</p>
-           </ul>
-     </main>
-    
+<div id="app">
+    <!-- PÁGINA LOGIN -->
+    <div id="page-login" class="page active">
+        <div class="auth-box">
+            <h1><i class="fas fa-film"></i>MOZFilmes</h1>
+            <p class="sub">O melhor streaming moçambicano</p>
+            <input type="email" id="login-email" placeholder="Email" value="demo@moz.com">
+            <input type="password" id="login-password" placeholder="Palavra-passe" value="123456">
+            <button class="btn-primary" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+            <div class="auth-switch">
+                Não tem conta? <a href="#" onclick="showPage('page-register')">Registe-se</a>
+            </div>
+            <div id="login-error" class="toast error hidden mt-10"></div>
+        </div>
+    </div>
+
+    <!-- PÁGINA REGISTO -->
+    <div id="page-register" class="page">
+        <div class="auth-box">
+            <h1 style="font-size:28px;"><i class="fas fa-user-plus"></i> Criar Conta</h1>
+            <p class="sub">Comece a assistir agora</p>
+            <input type="text" id="reg-name" placeholder="Nome completo" value="Usuário Teste">
+            <input type="email" id="reg-email" placeholder="Email" value="demo@moz.com">
+            <input type="text" id="reg-phone" placeholder="Número (ex: 841234567)" value="841234567">
+            <input type="password" id="reg-password" placeholder="Palavra-passe" value="123456">
+            <button class="btn-primary" onclick="handleRegister()"><i class="fas fa-check"></i> Criar conta</button>
+            <div class="auth-switch">
+                Já tem conta? <a href="#" onclick="showPage('page-login')">Entrar</a>
+            </div>
+            <div id="reg-error" class="toast error hidden mt-10"></div>
+        </div>
+    </div>
+
+    <!-- PÁGINA HOME -->
+    <div id="page-home" class="page">
+        <div class="app-header">
+            <h2 id="header-title"><i class="fas fa-film"></i>MOZFilmes</h2>
+            <span class="badge" id="home-badge"><i class="fas fa-crown"></i> <span id="plan-status-label">Grátis</span></span>
+        </div>
+
+        <div class="featured-banner">
+            <div class="text">
+                <h3>🇲🇿 Destaque Moçambique</h3>
+                <p>Filmes, séries, doramas e mais</p>
+            </div>
+            <span class="tag">Novo</span>
+        </div>
+
+        <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Pesquisar filmes, séries..." oninput="renderMovies()">
+
+        <div class="category-label">🌍 País</div>
+        <div class="category-scroll" id="categoryTabsCountry"></div>
+
+        <div class="category-label">🎭 Género</div>
+        <div class="category-scroll" id="categoryTabsGenre"></div>
+
+        <p class="section-title" id="categoryTitle">🎬 Todos os Filmes</p>
+        <div class="movie-grid" id="movieGrid"></div>
+        <div style="height:20px;"></div>
+    </div>
+
+    <!-- PÁGINA PLANOS -->
+    <div id="page-plans" class="page">
+        <div class="app-header">
+            <h2><i class="fas fa-tags"></i> Planos</h2>
+            <span class="badge"><i class="fas fa-wallet"></i> e-Mola</span>
+        </div>
+        <p style="color:#888; margin-bottom:16px;">Escolha o plano e pague via e-Mola com segurança.</p>
+        <div id="plans-container"></div>
+        <div style="height:20px;"></div>
+    </div>
+
+    <!-- PÁGINA CHECKOUT -->
+    <div id="page-checkout" class="page">
+        <div class="app-header">
+            <h2><i class="fas fa-qrcode"></i> Pagamento</h2>
+            <button onclick="showPage('page-plans')" style="background:none;border:none;color:#00b894;font-size:16px;cursor:pointer;"><i class="fas fa-arrow-left"></i> Voltar</button>
+        </div>
+        <div class="checkout-box">
+            <div class="receiver-info">
+                <i class="fas fa-user-check"></i> Pagar para: <strong>870544332</strong> (Receptor)
+            </div>
+            <p class="label">Plano selecionado</p>
+            <h3 id="checkout-plan-name" style="text-align:center;font-size:20px;">-</h3>
+            <div class="amount-display" id="checkout-amount">0 MZN</div>
+            <p class="label">Escolha a sua carteira</p>
+            <select id="wallet-type">
+                <option value="M-Pesa">M-Pesa (84/85)</option>
+                <option value="e-Mola">e-Mola (86/87)</option>
+            </select>
+            <p class="label">Insira o número do seu telemóvel (pagador)</p>
+            <input type="tel" id="checkout-phone" placeholder="84 123 4567" value="841234567">
+            <button class="btn-primary" onclick="generatePaymentRef()" id="btn-pay-emola">
+                <i class="fas fa-mobile-alt"></i> Pagar com <span id="wallet-label">M-Pesa</span>
+            </button>
+            
+            <div id="qr-section" class="hidden" style="margin-top:20px;"></div>
+            <div id="checkout-status" class="mt-10"></div>
+        </div>
+    </div>
+
+    <!-- PÁGINA PERFIL -->
+    <div id="page-profile" class="page">
+        <div class="app-header">
+            <h2><i class="fas fa-user"></i> Perfil</h2>
+            <button onclick="handleLogout()" style="background:#e74c3c;border:none;color:#fff;padding:6px 14px;border-radius:20px;font-weight:600;font-size:13px;cursor:pointer;">Sair</button>
+        </div>
+        <div class="profile-card">
+            <div class="avatar"><i class="fas fa-user-circle"></i></div>
+            <h3 id="profile-name">Carregando...</h3>
+            <p id="profile-email">email@exemplo.com</p>
+            <div style="margin-top:12px;">
+                <span class="status-badge" id="profile-status-badge">Grátis</span>
+            </div>
+        </div>
+        <div class="info-row"><span class="label">Telemóvel</span><span id="profile-phone">-</span></div>
+        <div class="info-row"><span class="label">Plano Atual</span><span id="profile-plan">Nenhum</span></div>
+        <div class="info-row"><span class="label">Expira em</span><span id="profile-expiry">-</span></div>
+        <div style="margin-top:30px; background:#1c1c1e; padding:16px; border-radius:16px;">
+            <p style="color:#888;font-size:13px;text-align:center;">
+                <i class="fas fa-shield-alt"></i> MOZFilmes v3.1 - Toque 5x no título para Admin (senha: Beatriz2005$)
+            </p>
+        </div>
+    </div>
+
+    <!-- MENU INFERIOR -->
+    <div class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-page="page-home"><i class="fas fa-home"></i> Início</button>
+        <button class="nav-item" data-page="page-plans"><i class="fas fa-tags"></i> Planos</button>
+        <button class="nav-item" data-page="page-profile"><i class="fas fa-user"></i> Perfil</button>
+    </div>
+
+    <!-- PLAYER (VERSÃO ATUALIZADA) -->
+    <div id="video-player-modal">
+        <button class="close-btn" onclick="fecharPlayer()"><i class="fas fa-times"></i></button>
+        <video id="main-video" controls autoplay controlsList="nodownload" playsinline>
+            <source src="" type="video/mp4">
+            O teu navegador não suporta a reprodução de vídeos.
+        </video>
+        <div class="player-info">
+            <h3 id="player-video-title">Título do Filme</h3>
+            <p id="player-status-message"><i class="fas fa-info-circle"></i> A transmitir em Qualidade Automática (Otimizado para redes móveis).</p>
+        </div>
+    </div>
+
+    <!-- MODAL PREMIUM -->
+    <div id="premium-warning-modal">
+        <div class="modal-box">
+            <i class="fas fa-crown"></i>
+            <h3>🔒 Conteúdo Premium</h3>
+            <p>Este filme está disponível apenas para assinantes.<br>Assine um plano para desbloquear todos os conteúdos.</p>
+            <button class="btn-primary" onclick="document.getElementById('premium-warning-modal').style.display='none'; showPage('page-plans')">
+                <i class="fas fa-tags"></i> Ver Planos
+            </button>
+            <button class="btn-close-modal" onclick="document.getElementById('premium-warning-modal').style.display='none'">
+                <i class="fas fa-times"></i> Fechar
+            </button>
+        </div>
+    </div>
+
+    <!-- ADMIN (com senha) -->
+    <div id="admin-panel">
+        <button class="admin-close" onclick="document.getElementById('admin-panel').style.display='none'">✕ Fechar</button>
+        <h2><i class="fas fa-upload"></i> Adicionar Filme</h2>
+        <input id="movie-title" placeholder="Título do Filme" value="O Meu Filme">
+        <input id="movie-poster" placeholder="URL da Capa (ex: https://i.imgur.com/...jpg)" value="https://picsum.photos/seed/novo/200/300">
+        <input id="movie-video" placeholder="URL do Vídeo (ex: https://meusite.com/filme.mp4)" value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">
+        <select id="movie-genre">
+            <option value="Ação">Ação</option>
+            <option value="Comédia">Comédia</option>
+            <option value="Drama">Drama</option>
+            <option value="Romance">Romance</option>
+            <option value="Suspense">Suspense</option>
+            <option value="Seriado">Seriado</option>
+            <option value="Dorama">Dorama</option>
+            <option value="Novela">Novela</option>
+            <option value="Anime">Anime</option>
+            <option value="Documentário">Documentário</option>
+            <option value="Outro" selected>Outro</option>
+        </select>
+        <input id="movie-country" placeholder="País (ex: Moçambique, Brasil, EUA)" value="Moçambique">
+        <div class="admin-checkbox">
+            <input type="checkbox" id="movie-premium">
+            <label for="movie-premium">🔒 Apenas Premium (assinantes)</label>
+        </div>
+        <button class="admin-save" onclick="saveMovie()"><i class="fas fa-save"></i> Salvar Filme</button>
+        <div id="admin-msg" style="margin-top:10px; color:#aaa;"></div>
+        <hr style="border-color:#2c2c2e; margin: 20px 0;">
+        <h3 style="color:#aaa;">📋 Meus Filmes Cadastrados</h3>
+        <div id="admin-list"></div>
+    </div>
+</div>
+
+<script>
+    // ================================================================
+    //  ROTAS E PÁGINAS
+    // ================================================================
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById(pageId);
+        if(target) target.classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.page === pageId);
+        });
+        if(pageId === 'page-home') { updateHomeBadge(); renderMovies(); }
+        if(pageId === 'page-profile') loadProfile();
+        if(pageId === 'page-plans') renderPlans();
+        target.scrollTop = 0;
+    }
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const pageId = btn.dataset.page;
+            if(pageId) showPage(pageId);
+        });
+    });
+
+    // ================================================================
+    //  AUTENTICAÇÃO
+    // ================================================================
+    function getUsers() { return JSON.parse(localStorage.getItem('moz_users') || '[]'); }
+    function saveUsers(users) { localStorage.setItem('moz_users', JSON.stringify(users)); }
+    function getCurrentUser() { const data = localStorage.getItem('moz_current_user'); return data ? JSON.parse(data) : null; }
+    function setCurrentUser(user) { localStorage.setItem('moz_current_user', JSON.stringify(user)); }
+    function logout() { localStorage.removeItem('moz_current_user'); showPage('page-login'); }
+
+    function handleRegister() {
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const phone = document.getElementById('reg-phone').value.trim();
+        const password = document.getElementById('reg-password').value.trim();
+        const errorEl = document.getElementById('reg-error');
+        if(!name || !email || !phone || !password) {
+            errorEl.innerText = 'Preencha todos os campos!';
+            errorEl.classList.remove('hidden');
+            return;
+        }
+        let users = getUsers();
+        if(users.find(u => u.email === email)) {
+            errorEl.innerText = 'Email já registado!';
+            errorEl.classList.remove('hidden');
+            return;
+        }
+        const newUser = { id: Date.now().toString(), name, email, phone, password, plan: null, planExpiry: null };
+        users.push(newUser);
+        saveUsers(users);
+        setCurrentUser(newUser);
+        errorEl.classList.add('hidden');
+        showPage('page-home');
+        updateHomeBadge();
+        renderMovies();
+        renderCategories();
+    }
+
+    function handleLogin() {
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+        const errorEl = document.getElementById('login-error');
+        const users = getUsers();
+        const found = users.find(u => u.email === email && u.password === password);
+        if(found) {
+            setCurrentUser(found);
+            errorEl.classList.add('hidden');
+            showPage('page-home');
+            updateHomeBadge();
+            renderMovies();
+            renderCategories();
+        } else {
+            errorEl.innerText = 'Email ou palavra-passe incorretos!';
+            errorEl.classList.remove('hidden');
+        }
+    }
+    function handleLogout() { logout(); }
+
+    // ================================================================
+    //  VERIFICAÇÃO DE PLANO
+    // ================================================================
+    function checkPlanStatus() {
+        const user = getCurrentUser();
+        if(!user || !user.plan || !user.planExpiry) return null;
+        const now = new Date();
+        const expiry = new Date(user.planExpiry);
+        if(expiry > now) {
+            return { plan: user.plan, expiry: expiry };
+        } else {
+            const users = getUsers();
+            const idx = users.findIndex(u => u.id === user.id);
+            if(idx !== -1) {
+                users[idx].plan = null;
+                users[idx].planExpiry = null;
+                saveUsers(users);
+                setCurrentUser(users[idx]);
+            }
+            return null;
+        }
+    }
+    function updateHomeBadge() {
+        const status = checkPlanStatus();
+        const badge = document.getElementById('plan-status-label');
+        const label = document.getElementById('home-badge');
+        if(status) {
+            badge.innerText = status.plan;
+            label.style.color = '#f1c40f';
+        } else {
+            badge.innerText = 'Grátis';
+            label.style.color = '#aaa';
+        }
+    }
+
+    // ================================================================
+    //  PLANOS
+    // ================================================================
+    const PLANS = [
+        { id: 'p1', name: 'Diário', price: 5, durationDays: 1, desc: 'Teste por 24h' },
+        { id: 'p2', name: 'Semanal', price: 25, durationDays: 7, desc: 'Melhor custo-benefício' },
+        { id: 'p3', name: 'Mensal', price: 90, durationDays: 30, desc: 'Acesso total + downloads' },
+        { id: 'p4', name: 'Anual', price: 850, durationDays: 365, desc: '2 meses grátis!' }
+    ];
+    let selectedPlanId = null;
+
+    function renderPlans() {
+        const container = document.getElementById('plans-container');
+        container.innerHTML = '';
+        PLANS.forEach(plan => {
+            const card = document.createElement('div');
+            card.className = 'plan-card';
+            card.innerHTML = `
+                <div class="top"><h3>${plan.name}</h3><span class="price">${plan.price} <small>MZN</small></span></div>
+                <p class="desc">${plan.desc} (${plan.durationDays} dias)</p>
+                <button class="btn-plan" onclick="selectPlan('${plan.id}')"><i class="fas fa-mobile-alt"></i> Assinar com e-Mola</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function selectPlan(planId) {
+        selectedPlanId = planId;
+        const plan = PLANS.find(p => p.id === planId);
+        if(!plan) return;
+        document.getElementById('checkout-plan-name').innerText = plan.name;
+        document.getElementById('checkout-amount').innerText = plan.price + ' MZN';
+        document.getElementById('qr-section').innerHTML = '';
+        document.getElementById('checkout-status').innerHTML = '';
+        document.getElementById('btn-pay-emola').disabled = false;
+        document.getElementById('btn-pay-emola').innerHTML = `<i class="fas fa-mobile-alt"></i> Pagar com ${document.getElementById('wallet-type').value}`;
+        showPage('page-checkout');
+    }
+
+    // ================================================================
+    //  CHECKOUT AVANÇADO (STK PUSH SIMULADO)
+    // ================================================================
+    const RECEIVER_PHONE = '870544332';
+
+    document.getElementById('wallet-type').addEventListener('change', function() {
+        document.getElementById('wallet-label').innerText = this.value;
+    });
+
+    async function generatePaymentRef() {
+        const phone = document.getElementById('checkout-phone').value.trim();
+        const wallet = document.getElementById('wallet-type').value;
+        const qrSection = document.getElementById('qr-section');
+        const statusDiv = document.getElementById('checkout-status');
+        const btn = document.getElementById('btn-pay-emola');
+
+        const phoneRegex = /^(84|85|86|87)\d{7}$/;
+        if (!phoneRegex.test(phone)) {
+            statusDiv.innerHTML = `<div class="toast error"><i class="fas fa-exclamation-circle"></i> Número inválido. Use 84/85 para M-Pesa ou 86/87 para e-Mola.</div>`;
+            return;
+        }
+
+        const plan = PLANS.find(p => p.id === selectedPlanId);
+        if (!plan) { alert('Selecione um plano primeiro.'); return; }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A enviar...';
+        statusDiv.innerHTML = '';
+        qrSection.classList.remove('hidden');
+        qrSection.innerHTML = `
+            <div style="text-align:center; padding:10px;">
+                <i class="fas fa-spinner fa-spin" style="font-size:30px; color:#f1c40f;"></i>
+                <p style="color:#f1c40f; font-weight:bold; margin-top:8px;">Enviando pedido de PIN para o seu telemóvel...</p>
+                <div style="background:#141414; padding:15px; border-radius:8px; margin-top:10px; color:#aaa; font-size:14px;">
+                    Verifique o seu telemóvel <strong>${phone}</strong>.<br>
+                    Introduza o PIN do <strong>${wallet}</strong> para autorizar o débito de <strong>${plan.price} MZN</strong>.
+                    <br><small>Simulação: a confirmação ocorrerá em 5 segundos.</small>
+                </div>
+            </div>
+        `;
+
+        try {
+            await verificarStatusPagamento(phone, plan.price);
+            ativarSubscricaoPremium();
+        } catch (error) {
+            qrSection.innerHTML = `
+                <div style="text-align:center; padding:10px;">
+                    <i class="fas fa-times-circle" style="font-size:30px; color:#e74c3c;"></i>
+                    <p style="color:#e74c3c; font-weight:bold; margin-top:8px;">O pagamento falhou ou expirou.</p>
+                    <button class="btn-primary" onclick="generatePaymentRef()" style="margin-top:10px;">Tentar Novamente</button>
+                </div>
+            `;
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-mobile-alt"></i> Pagar com ${wallet}`;
+        }
+    }
+
+    function verificarStatusPagamento(msisdn, valor) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const sucessoAPI = Math.random() > 0.1;
+                if (sucessoAPI) resolve(true);
+                else reject(false);
+            }, 5000);
+        });
+    }
+
+    function ativarSubscricaoPremium() {
+        const plan = PLANS.find(p => p.id === selectedPlanId);
+        if(!plan) return;
+        const user = getCurrentUser();
+        if(!user) { alert('Utilizador não encontrado.'); return; }
+
+        const now = new Date();
+        const expiry = new Date(now);
+        expiry.setDate(expiry.getDate() + plan.durationDays);
+        const users = getUsers();
+        const idx = users.findIndex(u => u.id === user.id);
+        if(idx !== -1) {
+            users[idx].plan = plan.name;
+            users[idx].planExpiry = expiry.toISOString();
+            saveUsers(users);
+            setCurrentUser(users[idx]);
+        }
+
+        const qrSection = document.getElementById('qr-section');
+        qrSection.innerHTML = `
+            <div style="text-align:center; padding:10px; color:#00b894;">
+                <i class="fas fa-check-circle" style="font-size:40px;"></i>
+                <p style="font-weight:bold; margin-top:8px;">Subscrição Ativada com Sucesso!</p>
+                <p style="color:#aaa; font-size:14px;">Plano ${plan.name} ativo até ${expiry.toLocaleDateString('pt-MZ')}</p>
+                <small>Pagamento para: ${RECEIVER_PHONE}</small>
+            </div>
+        `;
+        document.getElementById('btn-pay-emola').disabled = true;
+        document.getElementById('btn-pay-emola').innerHTML = '<i class="fas fa-check"></i> Pago';
+        updateHomeBadge();
+        setTimeout(() => showPage('page-home'), 2500);
+    }
+
+    // ================================================================
+    //  PERFIL
+    // ================================================================
+    function loadProfile() {
+        const user = getCurrentUser();
+        if(!user) { showPage('page-login'); return; }
+        const status = checkPlanStatus();
+        document.getElementById('profile-name').innerText = user.name || 'Utilizador';
+        document.getElementById('profile-email').innerText = user.email;
+        document.getElementById('profile-phone').innerText = user.phone || 'Não definido';
+        const badge = document.getElementById('profile-status-badge');
+        const planLabel = document.getElementById('profile-plan');
+        const expiryLabel = document.getElementById('profile-expiry');
+        if(status) {
+            badge.innerText = status.plan;
+            badge.className = 'status-badge';
+            planLabel.innerText = status.plan;
+            expiryLabel.innerText = status.expiry.toLocaleDateString('pt-MZ') + ' ' + status.expiry.toLocaleTimeString('pt-MZ');
+        } else {
+            badge.innerText = 'Conta Grátis';
+            badge.className = 'status-badge expired';
+            planLabel.innerText = 'Nenhum';
+            expiryLabel.innerText = '-';
+        }
+    }
+
+    // ================================================================
+    //  CATEGORIAS E FILMES (COM BLOQUEIO PREMIUM)
+    // ================================================================
+    const DEFAULT_MOVIES = [
+        { id: 'd1', title: 'O Predador', poster: 'https://picsum.photos/seed/movie1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true },
+        { id: 'd2', title: 'Njinga Mbande', poster: 'https://picsum.photos/seed/movie2/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Seriado', country: 'Angola', premiumOnly: false },
+        { id: 'd3', title: 'Maputo Connection', poster: 'https://picsum.photos/seed/movie3/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Ação', country: 'Moçambique', premiumOnly: false },
+        { id: 'd4', title: 'Xiconhoca', poster: 'https://picsum.photos/seed/movie4/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Comédia', country: 'Moçambique', premiumOnly: false },
+        { id: 'd5', title: 'Mar Azul', poster: 'https://picsum.photos/seed/movie5/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Drama', country: 'Brasil', premiumOnly: false },
+        { id: 'd6', title: 'Fogos de Artifício', poster: 'https://picsum.photos/seed/movie6/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Romance', country: 'Brasil', premiumOnly: false },
+        { id: 'd7', title: 'Naruto - O Filme', poster: 'https://picsum.photos/seed/anime1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Anime', country: 'Japão', premiumOnly: true },
+        { id: 'd8', title: 'A Casa do Dragão', poster: 'https://picsum.photos/seed/serie1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true },
+        { id: 'd9', title: 'Meu Amor de Verão', poster: 'https://picsum.photos/seed/dorama1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Dorama', country: 'Coreia do Sul', premiumOnly: false },
+        { id: 'd10', title: 'A Força do Querer', poster: 'https://picsum.photos/seed/novela1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Novela', country: 'Brasil', premiumOnly: false }
+    ];
+
+    let selectedCountry = 'Todos';
+    let selectedGenre = 'Todos';
+    let movieList = [];
+
+    function getMovies() {
+        const saved = JSON.parse(localStorage.getItem('moz_movies') || '[]');
+        if (saved && saved.length > 0) {
+            return saved.map(m => ({ ...m, premiumOnly: m.premiumOnly || false }));
+        }
+        return DEFAULT_MOVIES;
+    }
+
+    function getUniqueCountries(movies) {
+        const countries = new Set();
+        movies.forEach(m => { if(m.country) countries.add(m.country); });
+        return ['Todos', ...Array.from(countries).sort()];
+    }
+    function getUniqueGenres(movies) {
+        const genres = new Set();
+        movies.forEach(m => { if(m.genre) genres.add(m.genre); });
+        return ['Todos', ...Array.from(genres).sort()];
+    }
+
+    function getFlagEmoji(country) {
+        const map = {
+            'Moçambique': '🇲🇿', 'Brasil': '🇧🇷', 'EUA': '🇺🇸', 'Angola': '🇦🇴',
+            'Portugal': '🇵🇹', 'África do Sul': '🇿🇦', 'Japão': '🇯🇵',
+            'Coreia do Sul': '🇰🇷', 'Nigéria': '🇳🇬', 'Índia': '🇮🇳'
+        };
+        return map[country] || '🏳️';
+    }
+
+    function renderCategories() {
+        const movies = getMovies();
+        const containerCountry = document.getElementById('categoryTabsCountry');
+        const countries = getUniqueCountries(movies);
+        containerCountry.innerHTML = countries.map(c => `
+            <div class="category-pill ${c === selectedCountry ? 'active' : ''}" onclick="selectCategory('country', '${c}')">
+                ${c === 'Todos' ? '🌍 Todos' : getFlagEmoji(c) + ' ' + c}
+            </div>
+        `).join('');
+        const containerGenre = document.getElementById('categoryTabsGenre');
+        const genres = getUniqueGenres(movies);
+        const iconMap = { 'Todos':'🎬', 'Ação':'⚔️', 'Comédia':'😂', 'Drama':'🎭', 'Romance':'💕', 'Suspense':'🔪', 'Seriado':'📺', 'Dorama':'🇰🇷', 'Novela':'📖', 'Anime':'🎌', 'Documentário':'📹', 'Outro':'🎞️' };
+        containerGenre.innerHTML = genres.map(g => `
+            <div class="category-pill ${g === selectedGenre ? 'active' : ''}" onclick="selectCategory('genre', '${g}')">
+                ${iconMap[g] || '🎯'} ${g}
+            </div>
+        `).join('');
+    }
+
+    function selectCategory(type, value) {
+        if(type === 'country') selectedCountry = value;
+        else if(type === 'genre') selectedGenre = value;
+        renderCategories();
+        renderMovies();
+        updateTitle();
+    }
+
+    function updateTitle() {
+        const title = document.getElementById('categoryTitle');
+        let parts = [];
+        if(selectedCountry !== 'Todos') parts.push(selectedCountry);
+        if(selectedGenre !== 'Todos') parts.push(selectedGenre);
+        title.innerText = parts.length ? `🎬 ${parts.join(' - ')}` : '🎬 Todos os Filmes';
+    }
+
+    // ========== FAVORITOS ==========
+    function toggleFavorite(event, movieId) {
+        event.stopPropagation();
+        const key = `fav_${movieId}`;
+        const isFav = localStorage.getItem(key) === 'true';
+        if (isFav) localStorage.removeItem(key);
+        else localStorage.setItem(key, 'true');
+        renderMovies();
+    }
+
+    // ========== ACESSO PREMIUM ==========
+    function temAcessoPremium() {
+        const status = checkPlanStatus();
+        return status !== null;
+    }
+
+    // ================================================================
+    //  PLAYER ATUALIZADO (COM TRATAMENTO DE ERROS)
+    // ================================================================
+    function abrirPlayer(index) {
+        const movie = movieList[index];
+        if (!movie) {
+            console.error('Filme não encontrado no índice', index);
+            return;
+        }
+
+        if (movie.premiumOnly && !temAcessoPremium()) {
+            document.getElementById('premium-warning-modal').style.display = 'flex';
+            return;
+        }
+
+        const modal = document.getElementById('video-player-modal');
+        const video = document.getElementById('main-video');
+        const titleEl = document.getElementById('player-video-title');
+        const statusEl = document.getElementById('player-status-message');
+
+        // Limpa eventos anteriores
+        video.onerror = null;
+        video.onloadeddata = null;
+
+        // Define título
+        titleEl.innerText = movie.title;
+
+        // Mostra estado de carregamento
+        statusEl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#f1c40f;"></i> A carregar o vídeo...`;
+
+        // Define a URL do vídeo (usa fallback se estiver vazia)
+        const videoUrl = (movie.video && movie.video.trim() !== '') 
+            ? movie.video.trim() 
+            : 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+        
+        video.src = videoUrl;
+        video.load(); // Força o carregamento
+
+        // Mostra o modal
+        modal.style.display = 'flex';
+
+        // --- EVENTO DE SUCESSO ---
+        video.onloadeddata = function() {
+            statusEl.innerHTML = `<i class="fas fa-check-circle" style="color:#00b894;"></i> A transmitir em Qualidade Automática (Otimizado para redes móveis).`;
+            video.play().catch(e => console.log('Autoplay bloqueado:', e));
+        };
+
+        // --- EVENTO DE ERRO ---
+        video.onerror = function(e) {
+            console.error('Erro no vídeo:', e);
+            let erroMsg = 'Não foi possível reproduzir o vídeo.';
+            
+            // Tenta identificar o erro
+            const errorCode = video.error ? video.error.code : -1;
+            if (errorCode === 1) erroMsg = 'O carregamento do vídeo foi cancelado.';
+            else if (errorCode === 2) erroMsg = 'Ocorreu um erro de rede. Verifique a sua ligação.';
+            else if (errorCode === 3) erroMsg = 'O vídeo foi interrompido durante a descarga.';
+            else if (errorCode === 4) erroMsg = 'Formato de vídeo não suportado ou URL inválida.';
+            
+            // Verifica se é erro de CORS (Google Drive/Streamable)
+            if (videoUrl.includes('googleusercontent') || videoUrl.includes('drive.google')) {
+                erroMsg += ' O Google Drive bloqueia a reprodução direta. Experimente usar Streamable ou Cloudinary.';
+            } else if (videoUrl.includes('streamable')) {
+                erroMsg += ' Verifique se o link do Streamable é o correto. Tente usar o link de partilha normal.';
+            }
+
+            statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> ${erroMsg}`;
+            
+            // Botão para tentar novamente
+            const tryBtn = document.createElement('button');
+            tryBtn.innerText = '🔁 Tentar novamente';
+            tryBtn.className = 'btn-primary';
+            tryBtn.style.marginTop = '10px';
+            tryBtn.onclick = function() {
+                // Remove o botão antigo e recarrega
+                this.remove();
+                statusEl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#f1c40f;"></i> A recarregar...`;
+                video.src = videoUrl;
+                video.load();
+            };
+            statusEl.appendChild(tryBtn);
+        };
+    }
+
+    function fecharPlayer() {
+        const modal = document.getElementById('video-player-modal');
+        const video = document.getElementById('main-video');
+        const statusEl = document.getElementById('player-status-message');
+        
+        video.pause();
+        video.src = '';
+        video.onerror = null;
+        video.onloadeddata = null;
+        modal.style.display = 'none';
+        
+        // Restaura mensagem padrão
+        statusEl.innerHTML = `<i class="fas fa-info-circle"></i> A transmitir em Qualidade Automática (Otimizado para redes móveis).`;
+    }
+
+    // ========== RENDER FILMES ==========
+    function renderMovies() {
+        const grid = document.getElementById('movieGrid');
+        if(!grid) return;
+        const allMovies = getMovies();
+        let filtered = allMovies;
+        if(selectedCountry !== 'Todos') filtered = filtered.filter(m => m.country === selectedCountry);
+        if(selectedGenre !== 'Todos') filtered = filtered.filter(m => m.genre === selectedGenre);
+        const search = document.getElementById('searchInput').value.toLowerCase().trim();
+        if(search) filtered = filtered.filter(m => m.title.toLowerCase().includes(search));
+
+        movieList = filtered;
+
+        if(filtered.length === 0) {
+            grid.innerHTML = `<p style="color:#666; grid-column: span 2; text-align:center; padding:20px;">
+                Nenhum filme encontrado.<br>Toque 5x no título para administrar.
+            </p>`;
+            return;
+        }
+
+        const isPremium = temAcessoPremium();
+
+        grid.innerHTML = filtered.map((m, index) => {
+            const isFav = localStorage.getItem(`fav_${m.id}`) === 'true';
+            const heartClass = isFav ? 'fas fa-heart active' : 'far fa-heart';
+            const isLocked = m.premiumOnly && !isPremium;
+
+            return `
+                <div class="movie-card" onclick="abrirPlayer(${index})">
+                    <img src="${m.poster}" alt="${m.title}" loading="lazy" onerror="this.src='https://picsum.photos/seed/error/200/300'">
+                    ${isLocked ? `
+                        <div class="premium-overlay">
+                            <i class="fas fa-lock"></i>
+                            <span>🔒 Assine para ver</span>
+                        </div>
+                    ` : ''}
+                    <div class="info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                            <h4 style="max-width:80%;">${m.title} ${isLocked ? '🔒' : ''}</h4>
+                            <i class="${heartClass} fav-icon" onclick="toggleFavorite(event, '${m.id}')"></i>
+                        </div>
+                        <div class="meta">
+                            <span>${m.genre || 'Destaque'}</span>
+                            <span class="country-flag">${getFlagEmoji(m.country)}</span>
+                        </div>
+                    </div>
+                    ${isLocked ? `<div class="premium-lock"><i class="fas fa-crown"></i> Premium</div>` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    // ================================================================
+    //  ADMIN COM SENHA
+    // ================================================================
+    const ADMIN_PASSWORD = 'Beatriz2005$';
+
+    let adminClicks = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+        const header = document.getElementById('header-title');
+        if(header) {
+            header.addEventListener('click', () => {
+                adminClicks++;
+                if(adminClicks >= 5) {
+                    adminClicks = 0;
+                    const senha = prompt('🔐 Digite a senha de administrador para aceder ao painel:');
+                    if (senha === ADMIN_PASSWORD) {
+                        document.getElementById('admin-panel').style.display = 'block';
+                        loadAdminList();
+                    } else if (senha !== null) {
+                        alert('Senha incorreta!');
+                    }
+                }
+                setTimeout(() => adminClicks = 0, 3000);
+            });
+        }
+        document.getElementById('wallet-label').innerText = document.getElementById('wallet-type').value;
+    });
+
+    function saveMovie() {
+        const title = document.getElementById('movie-title').value.trim();
+        const poster = document.getElementById('movie-poster').value.trim();
+        const video = document.getElementById('movie-video').value.trim();
+        const genre = document.getElementById('movie-genre').value;
+        const country = document.getElementById('movie-country').value.trim() || 'Moçambique';
+        const premiumOnly = document.getElementById('movie-premium').checked;
+        if(!title || !poster || !video) {
+            document.getElementById('admin-msg').innerHTML = '<span style="color:#e74c3c;">Preencha Título, Capa e Vídeo!</span>';
+            return;
+        }
+        const current = JSON.parse(localStorage.getItem('moz_movies') || '[]');
+        current.push({ id: Date.now().toString(), title, poster, video, genre, country, premiumOnly });
+        localStorage.setItem('moz_movies', JSON.stringify(current));
+        document.getElementById('admin-msg').innerHTML = '<span style="color:#00b894;">✅ Filme adicionado com sucesso!</span>';
+        document.getElementById('movie-title').value = '';
+        document.getElementById('movie-poster').value = '';
+        document.getElementById('movie-video').value = '';
+        document.getElementById('movie-genre').value = 'Outro';
+        document.getElementById('movie-country').value = '';
+        document.getElementById('movie-premium').checked = false;
+        loadAdminList();
+        renderMovies();
+        renderCategories();
+    }
+
+    function loadAdminList() {
+        const container = document.getElementById('admin-list');
+        const movies = getMovies();
+        if(movies.length === 0) { container.innerHTML = '<p style="color:#666;">Nenhum filme cadastrado.</p>'; return; }
+        container.innerHTML = movies.map(m => `
+            <div class="admin-movie-item">
+                <span>${m.title} <small style="color:#888;">(${m.genre} • ${m.country}) ${m.premiumOnly ? '🔒' : ''}</small></span>
+                <button onclick="deleteMovie('${m.id}')">🗑️</button>
+            </div>
+        `).join('');
+    }
+
+    function deleteMovie(id) {
+        const senha = prompt('🔐 Confirme a senha para eliminar este filme:');
+        if (senha !== ADMIN_PASSWORD) {
+            alert('Senha incorreta! Operação cancelada.');
+            return;
+        }
+        let movies = JSON.parse(localStorage.getItem('moz_movies') || '[]');
+        const newMovies = movies.filter(m => m.id !== id);
+        if (newMovies.length === movies.length) {
+            alert('Este é um filme padrão. Não pode ser eliminado, mas pode adicionar os seus próprios.');
+            return;
+        }
+        localStorage.setItem('moz_movies', JSON.stringify(newMovies));
+        loadAdminList();
+        renderMovies();
+        renderCategories();
+    }
+
+    // ================================================================
+    //  INICIALIZAÇÃO
+    // ================================================================
+    (function init() {
+        const user = getCurrentUser();
+        if(user) {
+            checkPlanStatus();
+            showPage('page-home');
+            updateHomeBadge();
+            renderCategories();
+            renderMovies();
+            updateTitle();
+        } else {
+            showPage('page-login');
+        }
+        renderPlans();
+    })();
+
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') {
+            const activePage = document.querySelector('.page.active');
+            if(activePage) {
+                if(activePage.id === 'page-login') handleLogin();
+                else if(activePage.id === 'page-register') handleRegister();
+            }
+        }
+    });
+</script>
 </body>
-
-</html>São Carlos, Luanda, Pemba.
+</html>
