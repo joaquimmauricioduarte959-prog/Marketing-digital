@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MOZFilmes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="manifest" href='data:application/json,{"name":"MOZFilmes","short_name":"MOZFilmes","start_url":".","display":"standalone","background_color":"#0a0a0a","theme_color":"#00b894","icons":[{"src":"data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><text y=\".9em\" font-size=\"90\">🎬</text></svg>","sizes":"any","type":"image/svg+xml"}]}'>
+    
+    <link rel="manifest" href='data:application/json,{"name":"MOZFilmes","short_name":"MOZFilmes","start_url":".","display":"standalone","background_color":"#0a0a0a","theme_color":"#00b894","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 fill=%22%230a0a0a%22/%3E%3Ctext x=%2296%22 y=%22130%22 font-size=%2290%22 text-anchor=%22middle%22%3E🎬%3C/text%3E%3Ctext x=%2296%22 y=%22180%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22%2300b894%22%3EMOZ%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"},{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22%3E%3Crect width=%22512%22 height=%22512%22 fill=%22%230a0a0a%22/%3E%3Ctext x=%22256%22 y=%22350%22 font-size=%22240%22 text-anchor=%22middle%22%3E🎬%3C/text%3E%3Ctext x=%22256%22 y=%22480%22 font-size=%2280%22 text-anchor=%22middle%22 fill=%22%2300b894%22%3EMOZFilmes%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml"}]}'>
+
     <style>
-        /* ========== RESET E ESTILOS GLOBAIS ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -17,53 +18,103 @@
             overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: stretch;
+            padding: 0;
+            margin: 0;
         }
         #app {
             width: 100%;
-            max-width: 450px;
+            max-width: 100%;
             height: 100vh;
-            max-height: 850px;
+            max-height: 100vh;
             background-color: #0a0a0a;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            box-shadow: none;
+            border-radius: 0;
         }
         .page {
             display: none;
             flex-direction: column;
             height: 100%;
-            padding: 20px 16px;
+            padding: 12px 14px;
             overflow-y: auto;
-            padding-bottom: 80px;
+            padding-bottom: 76px;
         }
         .page.active { display: flex; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #1c1c1e; }
         ::-webkit-scrollbar-thumb { background: #00b894; border-radius: 10px; }
 
-        /* ========== LOGIN / REGISTO ========== */
+        #install-container {
+            display: none;
+            text-align: center;
+            padding: 6px;
+            background: #1c1c1e;
+            border-bottom: 1px solid #2c2c2e;
+            flex-shrink: 0;
+        }
+        #install-container button {
+            background: #00b894;
+            border: none;
+            padding: 5px 14px;
+            border-radius: 30px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0 8px 0;
+            flex-shrink: 0;
+        }
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #00b894;
+            cursor: pointer;
+        }
+        .app-header .logo i { font-size: 22px; }
+        .app-header .logo span { color: #fff; }
+        .app-header .badge {
+            background: #2c2c2e;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            color: #aaa;
+        }
+        .app-header .badge i { color: #f1c40f; margin-right: 4px; }
+
         #page-login, #page-register {
             justify-content: center;
             align-items: center;
             background: linear-gradient(145deg, #0a0a0a 0%, #141414 100%);
-            padding: 30px;
+            padding: 24px;
+            padding-bottom: 40px;
         }
         .auth-box { width: 100%; max-width: 340px; }
-        .auth-box h1 { font-size: 38px; color: #00b894; margin-bottom: 8px; letter-spacing: -1px; }
-        .auth-box h1 i { margin-right: 8px; }
-        .auth-box p.sub { color: #888; margin-bottom: 30px; font-size: 14px; }
+        .auth-box .logo-big { text-align: center; font-size: 54px; margin-bottom: 2px; }
+        .auth-box .logo-big i { color: #00b894; }
+        .auth-box h1 { font-size: 30px; color: #00b894; text-align: center; margin-bottom: 2px; letter-spacing: -1px; }
+        .auth-box p.sub { color: #888; text-align: center; margin-bottom: 20px; font-size: 13px; }
         .auth-box input {
             width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 14px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
             background: #1c1c1e;
             border: 1px solid #2c2c2e;
-            border-radius: 12px;
+            border-radius: 10px;
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             transition: border 0.3s;
         }
@@ -71,104 +122,94 @@
         .auth-box input::placeholder { color: #666; }
         .btn-primary {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: #00b894;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: #fff;
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
-            margin-top: 8px;
+            margin-top: 4px;
         }
         .btn-primary:active { background: #008a6e; transform: scale(0.97); }
-        .auth-switch { color: #888; margin-top: 18px; font-size: 14px; text-align: center; }
+        .auth-switch { color: #888; margin-top: 14px; font-size: 13px; text-align: center; }
         .auth-switch a { color: #00b894; font-weight: 600; text-decoration: none; }
-
-        /* ========== HEADER ========== */
-        .app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0 16px 0;
-            flex-shrink: 0;
+        .toast {
+            background: #1c1c1e;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #fff;
+            margin-bottom: 10px;
+            border-left: 4px solid #00b894;
+            font-size: 13px;
         }
-        .app-header h2 { font-size: 22px; color: #fff; cursor: pointer; }
-        .app-header h2 i { color: #00b894; margin-right: 6px; }
-        .app-header .badge {
-            background: #2c2c2e;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            color: #aaa;
-        }
-        .app-header .badge i { color: #f1c40f; margin-right: 4px; }
+        .toast.error { border-left-color: #e74c3c; }
+        .hidden { display: none !important; }
+        .mt-10 { margin-top: 10px; }
 
-        /* ========== PESQUISA ========== */
         .search-bar {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: #1c1c1e;
             border: 1px solid #2c2c2e;
             border-radius: 30px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
         }
         .search-bar:focus { border-color: #00b894; }
         .search-bar::placeholder { color: #666; }
 
-        /* ========== CATEGORIAS ========== */
-        .category-scroll {
+        .filter-scroll, .category-scroll {
             display: flex;
             overflow-x: auto;
-            gap: 10px;
-            padding: 8px 0 12px 0;
+            gap: 8px;
+            padding: 4px 0 8px 0;
             scrollbar-width: none;
             -ms-overflow-style: none;
             flex-shrink: 0;
         }
-        .category-scroll::-webkit-scrollbar { display: none; }
-        .category-pill {
+        .filter-scroll::-webkit-scrollbar, .category-scroll::-webkit-scrollbar { display: none; }
+        .filter-pill, .category-pill {
             background: #1c1c1e;
             border: 1px solid #2c2c2e;
             color: #aaa;
-            padding: 6px 16px;
+            padding: 4px 14px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
             transition: 0.2s;
             flex-shrink: 0;
         }
-        .category-pill:active { transform: scale(0.95); }
-        .category-pill.active {
+        .filter-pill:active, .category-pill:active { transform: scale(0.95); }
+        .filter-pill.active, .category-pill.active {
             background: #00b894;
             border-color: #00b894;
             color: #fff;
         }
         .category-label {
             color: #888;
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            padding: 4px 0;
+            padding: 4px 0 2px 0;
             flex-shrink: 0;
         }
 
-        /* ========== FILMES ========== */
         .movie-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 4px;
         }
         .movie-card {
             background: #1c1c1e;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             transition: transform 0.15s;
             cursor: pointer;
@@ -177,56 +218,61 @@
         .movie-card:active { transform: scale(0.96); }
         .movie-card img {
             width: 100%;
-            height: 140px;
+            height: 150px;
             object-fit: cover;
             background: #2c2c2e;
         }
-        .movie-card .info { padding: 10px 10px 12px; }
+        .movie-card .info { padding: 6px 8px 8px; }
         .movie-card .info h4 {
-            font-size: 13px;
+            font-size: 12px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-bottom: 1px;
+        }
+        .movie-card .info .episode-info {
+            font-size: 10px;
+            color: #888;
+            margin-top: 1px;
         }
         .movie-card .info .meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         .movie-card .info .meta span {
-            font-size: 10px;
+            font-size: 9px;
             color: #00b894;
             background: #004d3d;
-            padding: 2px 10px;
+            padding: 1px 8px;
             border-radius: 20px;
             display: inline-block;
         }
-        .movie-card .info .meta .country-flag { font-size: 14px; }
+        .movie-card .info .meta .country-flag { font-size: 12px; background: none; padding: 0; }
         .movie-card .fav-icon {
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             color: #888;
             transition: 0.2s;
         }
         .movie-card .fav-icon.active { color: #e74c3c; }
-
         .movie-card .premium-lock {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 4px;
+            right: 4px;
             background: rgba(0,0,0,0.7);
             color: #f1c40f;
-            padding: 4px 8px;
+            padding: 2px 6px;
             border-radius: 20px;
-            font-size: 10px;
+            font-size: 8px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             backdrop-filter: blur(4px);
         }
-        .movie-card .premium-lock i { font-size: 12px; }
+        .movie-card .premium-lock i { font-size: 9px; }
         .movie-card .premium-overlay {
             position: absolute;
             top: 0;
@@ -238,188 +284,182 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 12px;
-            gap: 6px;
+            border-radius: 10px;
+            gap: 4px;
             backdrop-filter: blur(2px);
         }
-        .movie-card .premium-overlay i { font-size: 30px; color: #f1c40f; }
+        .movie-card .premium-overlay i { font-size: 24px; color: #f1c40f; }
         .movie-card .premium-overlay span {
-            font-size: 12px;
+            font-size: 10px;
             color: #fff;
             font-weight: 600;
             background: rgba(0,0,0,0.5);
-            padding: 4px 12px;
+            padding: 2px 8px;
             border-radius: 20px;
         }
         .section-title {
             color: #aaa;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin: 6px 0 4px 0;
         }
         .featured-banner {
             background: linear-gradient(90deg, #1c1c1e, #004d3d);
-            border-radius: 16px;
-            padding: 18px 16px;
-            margin-bottom: 10px;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .featured-banner .text h3 { font-size: 16px; }
-        .featured-banner .text p { font-size: 12px; color: #aaa; }
-        .featured-banner .tag {
-            background: #00b894;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
+        .featured-banner .text h3 { font-size: 14px; }
+        .featured-banner .text p { font-size: 10px; color: #aaa; }
+        .featured-banner .tag { background: #00b894; padding: 2px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; }
 
-        /* ========== PLANOS ========== */
-        .plan-card {
+        .nav-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .nav-header .back-btn {
+            background: none;
+            border: none;
+            color: #00b894;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        .nav-header .title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            flex: 1;
+        }
+        .season-grid, .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 4px;
+        }
+        .season-card, .episode-card {
             background: #1c1c1e;
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 14px;
+            border-radius: 10px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
             border: 1px solid #2c2c2e;
         }
-        .plan-card:active { border-color: #00b894; }
+        .season-card:active, .episode-card:active { transform: scale(0.95); }
+        .season-card h3 { font-size: 16px; color: #00b894; }
+        .season-card p { font-size: 12px; color: #888; }
+        .episode-card h4 { font-size: 14px; color: #fff; }
+        .episode-card p { font-size: 11px; color: #888; }
+
+        .plan-card {
+            background: #1c1c1e;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid #2c2c2e;
+        }
         .plan-card .top { display: flex; justify-content: space-between; align-items: center; }
-        .plan-card .top h3 { font-size: 18px; }
-        .plan-card .price { font-size: 22px; font-weight: 700; color: #00b894; }
-        .plan-card .price small { font-size: 13px; font-weight: 400; color: #888; }
-        .plan-card .desc { color: #aaa; font-size: 14px; margin: 6px 0 12px 0; }
+        .plan-card .top h3 { font-size: 16px; }
+        .plan-card .price { font-size: 18px; font-weight: 700; color: #00b894; }
+        .plan-card .price small { font-size: 11px; font-weight: 400; color: #888; }
+        .plan-card .desc { color: #aaa; font-size: 12px; margin: 4px 0 8px 0; }
         .btn-plan {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: transparent;
             border: 2px solid #00b894;
             border-radius: 10px;
             color: #00b894;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 13px;
             cursor: pointer;
             transition: 0.2s;
         }
         .btn-plan:active { background: #00b894; color: #fff; }
 
-        /* ========== CHECKOUT ========== */
         .checkout-box {
             background: #1c1c1e;
-            border-radius: 20px;
-            padding: 24px;
-            margin-top: 10px;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 8px;
+            text-align: center;
         }
         .checkout-box .receiver-info {
             background: #004d3d;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 16px;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 12px;
             color: #fff;
-            font-size: 14px;
+            font-size: 12px;
         }
-        .checkout-box .receiver-info strong { font-size: 18px; color: #f1c40f; }
+        .checkout-box .receiver-info strong { font-size: 14px; color: #f1c40f; }
         .checkout-box .amount-display {
-            text-align: center;
-            font-size: 40px;
+            font-size: 32px;
             font-weight: 700;
             color: #00b894;
-            margin: 6px 0 4px;
+            margin: 4px 0;
         }
-        .checkout-box .label { color: #888; font-size: 14px; text-align: center; margin-bottom: 20px; }
-        .checkout-box input, .checkout-box select {
-            width: 100%;
-            padding: 14px;
-            background: #0a0a0a;
-            border: 1px solid #2c2c2e;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            margin-bottom: 16px;
-            outline: none;
+        .checkout-box .label { color: #888; font-size: 12px; margin-bottom: 12px; }
+        .checkout-box .btn-primary {
+            max-width: 300px;
+            margin: 0 auto;
         }
-        .checkout-box input:focus, .checkout-box select:focus { border-color: #00b894; }
-        .checkout-box select option { background: #1c1c1e; }
-        .qr-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 16px 0;
-            padding: 16px;
-            background: #0a0a0a;
-            border-radius: 16px;
-            border: 1px dashed #2c2c2e;
-        }
-        .qr-area .ref { color: #888; font-size: 12px; margin-top: 8px; word-break: break-all; text-align: center; }
-        .btn-success {
-            width: 100%;
-            padding: 14px;
-            background: #f1c40f;
-            border: none;
-            border-radius: 12px;
-            color: #000;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-        .btn-success:active { background: #d4a800; transform: scale(0.97); }
-        .btn-danger {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            border: 1px solid #e74c3c;
-            border-radius: 12px;
-            color: #e74c3c;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
+        .checkout-box .info-text {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 12px;
+            line-height: 1.5;
         }
 
-        /* ========== PERFIL ========== */
         .profile-card {
             background: #1c1c1e;
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 18px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
         .profile-card .avatar {
-            font-size: 60px;
+            font-size: 44px;
             color: #00b894;
             background: #0a0a0a;
-            width: 80px;
-            height: 80px;
-            border-radius: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
+            margin: 0 auto 8px;
         }
-        .profile-card h3 { font-size: 20px; }
-        .profile-card p { color: #aaa; font-size: 14px; }
+        .profile-card h3 { font-size: 17px; }
+        .profile-card p { color: #aaa; font-size: 12px; }
         .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #2c2c2e;
             color: #ccc;
+            font-size: 13px;
         }
         .info-row .label { color: #888; }
         .status-badge {
             background: #00b894;
             color: #fff;
-            padding: 2px 14px;
+            padding: 2px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
         }
         .status-badge.expired { background: #e74c3c; }
 
-        /* ========== MENU INFERIOR ========== */
+        /* Menu inferior - oculto por padrão */
         .bottom-nav {
             position: absolute;
             bottom: 0;
@@ -427,28 +467,30 @@
             right: 0;
             background: #141414;
             border-top: 1px solid #2c2c2e;
-            display: flex;
+            display: none;
             justify-content: space-around;
-            padding: 10px 0 12px;
+            padding: 6px 0 8px;
             backdrop-filter: blur(10px);
             z-index: 99;
+        }
+        .bottom-nav.show {
+            display: flex;
         }
         .bottom-nav .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             color: #666;
-            font-size: 10px;
+            font-size: 9px;
             background: none;
             border: none;
             cursor: pointer;
             transition: color 0.2s;
-            padding: 4px 12px;
+            padding: 2px 10px;
         }
-        .bottom-nav .nav-item i { font-size: 22px; margin-bottom: 2px; }
+        .bottom-nav .nav-item i { font-size: 18px; margin-bottom: 1px; }
         .bottom-nav .nav-item.active { color: #00b894; }
 
-        /* ========== ADMIN ========== */
         #admin-panel {
             display: none;
             position: fixed;
@@ -458,18 +500,19 @@
             height: 100%;
             background: rgba(0,0,0,0.95);
             z-index: 999;
-            padding: 30px 20px;
+            padding: 16px 14px;
             overflow-y: auto;
         }
-        #admin-panel h2 { color: #00b894; }
+        #admin-panel h2 { color: #00b894; font-size: 18px; }
         #admin-panel input, #admin-panel select {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 8px 10px;
+            margin: 5px 0;
             background: #1c1c1e;
             border: 1px solid #2c2c2e;
             border-radius: 8px;
             color: #fff;
+            font-size: 13px;
         }
         #admin-panel select option { background: #1c1c1e; }
         #admin-panel .admin-close {
@@ -477,55 +520,60 @@
             background: #e74c3c;
             color: #fff;
             border: none;
-            padding: 8px 16px;
+            padding: 4px 12px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 13px;
         }
         #admin-panel .admin-save {
             width: 100%;
-            padding: 14px;
+            padding: 10px;
             background: #00b894;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: #fff;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
         }
         #admin-panel .admin-checkbox {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 10px 0;
+            gap: 6px;
+            margin: 5px 0;
             color: #aaa;
+            font-size: 13px;
         }
         #admin-panel .admin-checkbox input {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             accent-color: #00b894;
             margin: 0;
         }
-        .admin-movie-item {
+        .admin-movie-item, .admin-user-item {
             background: #1c1c1e;
-            padding: 10px;
+            padding: 6px 10px;
             border-radius: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: #fff;
+            font-size: 12px;
         }
-        .admin-movie-item button {
+        .admin-movie-item button, .admin-user-item button {
             background: #e74c3c;
             border: none;
             color: #fff;
-            padding: 4px 12px;
+            padding: 2px 8px;
             border-radius: 6px;
             cursor: pointer;
+            font-size: 11px;
         }
+        .admin-section { margin-top: 14px; }
+        .admin-section h3 { color: #aaa; font-size: 14px; margin-bottom: 4px; border-bottom: 1px solid #2c2c2e; padding-bottom: 4px; }
 
-        /* ========== PLAYER ========== */
         #video-player-modal {
             display: none;
             position: fixed;
@@ -541,46 +589,46 @@
         }
         #video-player-modal .close-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 12px;
+            right: 12px;
             background: rgba(255,255,255,0.2);
             border: none;
             color: #fff;
-            font-size: 20px;
-            padding: 10px 15px;
+            font-size: 16px;
+            padding: 6px 10px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 1001;
         }
-        #video-player-modal video {
+        #video-player-modal .player-container {
             width: 100%;
-            max-height: 70vh;
+            max-height: 65vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            flex-shrink: 0;
+        }
+        #video-player-modal .player-container video {
+            width: 100%;
+            max-height: 65vh;
             background: #000;
         }
+        #video-player-modal .player-container iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
         #video-player-modal .player-info {
-            padding: 20px;
+            padding: 12px 16px;
             width: 100%;
             max-width: 500px;
             text-align: left;
-            min-height: 80px;
+            min-height: 50px;
         }
-        #video-player-modal .player-info h3 { color: #fff; margin-bottom: 5px; }
-        #video-player-modal .player-info p { color: #aaa; font-size: 14px; margin: 0; }
-        #video-player-modal .player-info .btn-primary {
-            width: auto;
-            padding: 8px 20px;
-            font-size: 14px;
-            display: inline-block;
-            margin-top: 10px;
-            background: #00b894;
-            border: none;
-            border-radius: 8px;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-        }
+        #video-player-modal .player-info h3 { color: #fff; font-size: 15px; margin-bottom: 2px; }
+        #video-player-modal .player-info p { color: #aaa; font-size: 12px; margin: 0; }
 
-        /* ========== MODAL DE AVISO PREMIUM ========== */
         #premium-warning-modal {
             display: none;
             position: fixed;
@@ -596,69 +644,87 @@
         }
         #premium-warning-modal .modal-box {
             background: #1c1c1e;
-            border-radius: 20px;
-            padding: 30px 24px;
-            max-width: 340px;
+            border-radius: 16px;
+            padding: 20px 18px;
+            max-width: 300px;
             width: 90%;
             text-align: center;
             border: 1px solid #2c2c2e;
         }
-        #premium-warning-modal .modal-box i {
-            font-size: 50px;
-            color: #f1c40f;
-            margin-bottom: 12px;
-        }
-        #premium-warning-modal .modal-box h3 {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-        #premium-warning-modal .modal-box p {
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        #premium-warning-modal .modal-box .btn-primary {
-            margin-top: 0;
-        }
+        #premium-warning-modal .modal-box i { font-size: 40px; color: #f1c40f; margin-bottom: 8px; }
+        #premium-warning-modal .modal-box h3 { font-size: 17px; margin-bottom: 4px; }
+        #premium-warning-modal .modal-box p { color: #aaa; font-size: 12px; margin-bottom: 14px; line-height: 1.4; }
+        #premium-warning-modal .modal-box .btn-primary { margin-top: 0; }
         #premium-warning-modal .modal-box .btn-close-modal {
             background: transparent;
             border: 1px solid #666;
             color: #aaa;
-            padding: 10px;
-            border-radius: 12px;
+            padding: 6px;
+            border-radius: 10px;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
         }
 
-        /* ========== UTILITÁRIOS ========== */
-        .hidden { display: none !important; }
-        .mt-10 { margin-top: 10px; }
-        .text-center { text-align: center; }
-        .toast {
-            background: #1c1c1e;
-            padding: 12px 18px;
-            border-radius: 12px;
-            color: #fff;
-            margin-bottom: 12px;
-            border-left: 4px solid #00b894;
-            font-size: 14px;
+        .footer {
+            margin-top: 16px;
+            padding: 12px 0 4px;
+            border-top: 1px solid #2c2c2e;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
-        .toast.error { border-left-color: #e74c3c; }
+        .footer .links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .footer .links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        .footer .links a:hover { color: #00b894; }
+        .footer .links a i { margin-right: 4px; }
+        .footer .whatsapp a { color: #25D366; font-weight: 600; font-size: 13px; }
+        .footer .whatsapp a i { margin-right: 4px; }
+        .footer .copy { color: #555; font-size: 10px; margin-top: 4px; }
+
+        .about-content {
+            background: #1c1c1e;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+        .about-content h3 { color: #00b894; margin-bottom: 6px; }
+        .about-content p { color: #aaa; font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+        .about-content ul { color: #aaa; font-size: 13px; padding-left: 20px; line-height: 1.8; }
+        .about-content ul li { margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <!-- PÁGINA LOGIN -->
+    <!-- INSTALAÇÃO -->
+    <div id="install-container">
+        <button id="install-btn"><i class="fas fa-download"></i> Instalar MOZFilmes</button>
+        <span style="color:#888;font-size:10px;margin-left:6px;">(App offline)</span>
+    </div>
+
+    <!-- ========== PÁGINAS ========== -->
+
+    <!-- LOGIN -->
     <div id="page-login" class="page active">
         <div class="auth-box">
-            <h1><i class="fas fa-film"></i>MOZFilmes</h1>
+            <div class="logo-big"><i class="fas fa-film"></i></div>
+            <h1>MOZFilmes</h1>
             <p class="sub">O melhor streaming moçambicano</p>
-            <input type="email" id="login-email" placeholder="Email" value="demo@moz.com">
-            <input type="password" id="login-password" placeholder="Palavra-passe" value="123456">
+            <input type="text" id="login-email-or-phone" placeholder="Email ou Telemóvel" value="">
+            <input type="password" id="login-password" placeholder="Palavra-passe (mínimo 8)" value="">
             <button class="btn-primary" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
             <div class="auth-switch">
                 Não tem conta? <a href="#" onclick="showPage('page-register')">Registe-se</a>
@@ -667,15 +733,16 @@
         </div>
     </div>
 
-    <!-- PÁGINA REGISTO -->
+    <!-- REGISTO -->
     <div id="page-register" class="page">
         <div class="auth-box">
-            <h1 style="font-size:28px;"><i class="fas fa-user-plus"></i> Criar Conta</h1>
+            <div class="logo-big"><i class="fas fa-user-plus"></i></div>
+            <h1 style="font-size:26px;">Criar Conta</h1>
             <p class="sub">Comece a assistir agora</p>
-            <input type="text" id="reg-name" placeholder="Nome completo" value="Usuário Teste">
-            <input type="email" id="reg-email" placeholder="Email" value="demo@moz.com">
-            <input type="text" id="reg-phone" placeholder="Número (ex: 841234567)" value="841234567">
-            <input type="password" id="reg-password" placeholder="Palavra-passe" value="123456">
+            <input type="text" id="reg-name" placeholder="Nome completo" value="">
+            <input type="email" id="reg-email" placeholder="Email" value="">
+            <input type="text" id="reg-phone" placeholder="Telemóvel (84/85/86/87 + 7 dígitos)" value="">
+            <input type="password" id="reg-password" placeholder="Palavra-passe (mínimo 8)" value="">
             <button class="btn-primary" onclick="handleRegister()"><i class="fas fa-check"></i> Criar conta</button>
             <div class="auth-switch">
                 Já tem conta? <a href="#" onclick="showPage('page-login')">Entrar</a>
@@ -684,10 +751,13 @@
         </div>
     </div>
 
-    <!-- PÁGINA HOME -->
+    <!-- HOME -->
     <div id="page-home" class="page">
         <div class="app-header">
-            <h2 id="header-title"><i class="fas fa-film"></i>MOZFilmes</h2>
+            <div class="logo" id="header-title">
+                <i class="fas fa-film"></i>
+                <span>MOZFilmes</span>
+            </div>
             <span class="badge" id="home-badge"><i class="fas fa-crown"></i> <span id="plan-status-label">Grátis</span></span>
         </div>
 
@@ -699,7 +769,10 @@
             <span class="tag">Novo</span>
         </div>
 
-        <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Pesquisar filmes, séries..." oninput="renderMovies()">
+        <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Pesquisar filmes, séries..." oninput="renderHome()">
+
+        <div class="category-label">📺 Séries</div>
+        <div class="filter-scroll" id="seriesFilterHome"></div>
 
         <div class="category-label">🌍 País</div>
         <div class="category-scroll" id="categoryTabsCountry"></div>
@@ -709,90 +782,176 @@
 
         <p class="section-title" id="categoryTitle">🎬 Todos os Filmes</p>
         <div class="movie-grid" id="movieGrid"></div>
-        <div style="height:20px;"></div>
+
+        <div class="footer">
+            <div class="links">
+                <a href="#" onclick="showPage('page-about')"><i class="fas fa-info-circle"></i> Sobre Nós</a>
+                <a href="https://wa.me/message/TZ5L46AZ7AJFP1" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+            <div class="copy">© 2026 MOZFilmes - Todos os direitos reservados</div>
+        </div>
+        <div style="height:10px;"></div>
     </div>
 
-    <!-- PÁGINA PLANOS -->
+    <!-- LISTA DE SÉRIES -->
+    <div id="page-series-list" class="page">
+        <div class="app-header">
+            <div class="logo"><i class="fas fa-tv"></i><span>Séries</span></div>
+            <button onclick="showPage('page-home')" style="background:none;border:none;color:#00b894;font-size:14px;cursor:pointer;"><i class="fas fa-times"></i> Fechar</button>
+        </div>
+        <div class="movie-grid" id="seriesGrid"></div>
+        <div style="height:10px;"></div>
+    </div>
+
+    <!-- TEMPORADAS -->
+    <div id="page-seasons" class="page">
+        <div class="nav-header">
+            <button class="back-btn" onclick="showPage('page-series-list')"><i class="fas fa-arrow-left"></i></button>
+            <span class="title" id="seasons-title">Temporadas</span>
+        </div>
+        <div class="season-grid" id="seasonsGrid"></div>
+        <div style="height:10px;"></div>
+    </div>
+
+    <!-- EPISÓDIOS -->
+    <div id="page-episodes" class="page">
+        <div class="nav-header">
+            <button class="back-btn" onclick="showPage('page-seasons')"><i class="fas fa-arrow-left"></i></button>
+            <span class="title" id="episodes-title">Episódios</span>
+        </div>
+        <div class="episode-grid" id="episodesGrid"></div>
+        <div style="height:10px;"></div>
+    </div>
+
+    <!-- GRUPO DE FILMES -->
+    <div id="page-group-movies" class="page">
+        <div class="nav-header">
+            <button class="back-btn" onclick="showPage('page-home')"><i class="fas fa-arrow-left"></i></button>
+            <span class="title" id="group-title">Filmes</span>
+        </div>
+        <div class="movie-grid" id="groupMoviesGrid"></div>
+        <div style="height:10px;"></div>
+    </div>
+
+    <!-- PLANOS -->
     <div id="page-plans" class="page">
         <div class="app-header">
-            <h2><i class="fas fa-tags"></i> Planos</h2>
-            <span class="badge"><i class="fas fa-wallet"></i> e-Mola</span>
+            <div class="logo"><i class="fas fa-tags"></i><span>Planos</span></div>
+            <span class="badge"><i class="fas fa-wallet"></i> ZumpoPay</span>
         </div>
-        <p style="color:#888; margin-bottom:16px;">Escolha o plano e pague via e-Mola com segurança.</p>
+        <p style="color:#888; margin-bottom:12px; font-size:12px;">Escolha o plano e será redirecionado para o pagamento seguro.</p>
         <div id="plans-container"></div>
-        <div style="height:20px;"></div>
+        <div class="footer" style="border-top: none; padding-top: 0;">
+            <div class="links">
+                <a href="#" onclick="showPage('page-home')"><i class="fas fa-home"></i> Início</a>
+                <a href="#" onclick="showPage('page-about')"><i class="fas fa-info-circle"></i> Sobre</a>
+            </div>
+        </div>
     </div>
 
-    <!-- PÁGINA CHECKOUT -->
+    <!-- CHECKOUT -->
     <div id="page-checkout" class="page">
         <div class="app-header">
-            <h2><i class="fas fa-qrcode"></i> Pagamento</h2>
-            <button onclick="showPage('page-plans')" style="background:none;border:none;color:#00b894;font-size:16px;cursor:pointer;"><i class="fas fa-arrow-left"></i> Voltar</button>
+            <div class="logo"><i class="fas fa-qrcode"></i><span>Pagamento</span></div>
+            <button onclick="showPage('page-plans')" style="background:none;border:none;color:#00b894;font-size:14px;cursor:pointer;"><i class="fas fa-arrow-left"></i> Voltar</button>
         </div>
         <div class="checkout-box">
             <div class="receiver-info">
                 <i class="fas fa-user-check"></i> Pagar para: <strong>870544332</strong> (Receptor)
             </div>
             <p class="label">Plano selecionado</p>
-            <h3 id="checkout-plan-name" style="text-align:center;font-size:20px;">-</h3>
+            <h3 id="checkout-plan-name" style="font-size:17px;">-</h3>
             <div class="amount-display" id="checkout-amount">0 MZN</div>
-            <p class="label">Escolha a sua carteira</p>
-            <select id="wallet-type">
-                <option value="M-Pesa">M-Pesa (84/85)</option>
-                <option value="e-Mola">e-Mola (86/87)</option>
-            </select>
-            <p class="label">Insira o número do seu telemóvel (pagador)</p>
-            <input type="tel" id="checkout-phone" placeholder="84 123 4567" value="841234567">
-            <button class="btn-primary" onclick="generatePaymentRef()" id="btn-pay-emola">
-                <i class="fas fa-mobile-alt"></i> Pagar com <span id="wallet-label">M-Pesa</span>
+            <p class="label">Clique no botão para ser redirecionado para o pagamento seguro.</p>
+            <button class="btn-primary" onclick="redirectToPayment()">
+                <i class="fas fa-external-link-alt"></i> Ir para Pagamento
             </button>
-            
-            <div id="qr-section" class="hidden" style="margin-top:20px;"></div>
             <div id="checkout-status" class="mt-10"></div>
+            <div class="info-text">
+                <i class="fas fa-lock" style="color:#00b894;"></i> Pagamento seguro via ZumpoPay.<br>
+                Após o pagamento, será redirecionado de volta.
+            </div>
         </div>
+        <div style="height:10px;"></div>
     </div>
 
-    <!-- PÁGINA PERFIL -->
+    <!-- PERFIL -->
     <div id="page-profile" class="page">
         <div class="app-header">
-            <h2><i class="fas fa-user"></i> Perfil</h2>
-            <button onclick="handleLogout()" style="background:#e74c3c;border:none;color:#fff;padding:6px 14px;border-radius:20px;font-weight:600;font-size:13px;cursor:pointer;">Sair</button>
+            <div class="logo"><i class="fas fa-user"></i><span>Perfil</span></div>
+            <button onclick="handleLogout()" style="background:#e74c3c;border:none;color:#fff;padding:4px 12px;border-radius:20px;font-weight:600;font-size:11px;cursor:pointer;">Sair</button>
         </div>
         <div class="profile-card">
             <div class="avatar"><i class="fas fa-user-circle"></i></div>
             <h3 id="profile-name">Carregando...</h3>
             <p id="profile-email">email@exemplo.com</p>
-            <div style="margin-top:12px;">
+            <div style="margin-top:8px;">
                 <span class="status-badge" id="profile-status-badge">Grátis</span>
             </div>
         </div>
         <div class="info-row"><span class="label">Telemóvel</span><span id="profile-phone">-</span></div>
         <div class="info-row"><span class="label">Plano Atual</span><span id="profile-plan">Nenhum</span></div>
         <div class="info-row"><span class="label">Expira em</span><span id="profile-expiry">-</span></div>
-        <div style="margin-top:30px; background:#1c1c1e; padding:16px; border-radius:16px;">
-            <p style="color:#888;font-size:13px;text-align:center;">
-                <i class="fas fa-shield-alt"></i> MOZFilmes v3.1 - Toque 5x no título para Admin (senha: Beatriz2005$)
+        <div style="margin-top:16px; background:#1c1c1e; padding:12px; border-radius:14px;">
+            <p style="color:#888;font-size:11px;text-align:center;">
+                <i class="fas fa-shield-alt"></i> MOZFilmes v4.0 - Toque 5x no título para Admin
             </p>
+        </div>
+        <div class="footer" style="border-top: none; padding-top: 0;">
+            <div class="links">
+                <a href="#" onclick="showPage('page-about')"><i class="fas fa-info-circle"></i> Sobre Nós</a>
+                <a href="https://wa.me/message/TZ5L46AZ7AJFP1" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
         </div>
     </div>
 
-    <!-- MENU INFERIOR -->
+    <!-- SOBRE NÓS -->
+    <div id="page-about" class="page">
+        <div class="app-header">
+            <div class="logo"><i class="fas fa-info-circle"></i><span>Sobre Nós</span></div>
+            <button onclick="showPage('page-home')" style="background:none;border:none;color:#00b894;font-size:14px;cursor:pointer;"><i class="fas fa-times"></i> Fechar</button>
+        </div>
+        <div class="about-content">
+            <h3>🎬 MOZFilmes</h3>
+            <p>O <strong>MOZFilmes</strong> é uma plataforma de streaming moçambicana que reúne filmes, séries, doramas, novelas e animes num só lugar.</p>
+            <p><strong>Missão:</strong> Democratizar o acesso a conteúdo de qualidade, com preços acessíveis e pagamentos locais via ZumpoPay.</p>
+            <h3 style="margin-top:12px;">📌 Contactos</h3>
+            <ul>
+                <li><i class="fab fa-whatsapp" style="color:#25D366;"></i> <strong>WhatsApp:</strong> <a href="https://wa.me/message/TZ5L46AZ7AJFP1" target="_blank" style="color:#25D366;text-decoration:none;">Clique aqui</a></li>
+                <li><i class="fas fa-envelope" style="color:#00b894;"></i> <strong>Email:</strong> suporte@mozfilmes.com</li>
+            </ul>
+            <h3 style="margin-top:12px;">📍 Localização</h3>
+            <p>Moçambique, Maputo</p>
+        </div>
+        <div class="footer" style="border-top: none; padding-top: 0;">
+            <div class="links">
+                <a href="#" onclick="showPage('page-home')"><i class="fas fa-home"></i> Início</a>
+                <a href="#" onclick="showPage('page-plans')"><i class="fas fa-tags"></i> Planos</a>
+                <a href="https://wa.me/message/TZ5L46AZ7AJFP1" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU INFERIOR - inicialmente oculto -->
     <div class="bottom-nav" id="bottomNav">
-        <button class="nav-item active" data-page="page-home"><i class="fas fa-home"></i> Início</button>
+        <button class="nav-item" data-page="page-home"><i class="fas fa-home"></i> Início</button>
         <button class="nav-item" data-page="page-plans"><i class="fas fa-tags"></i> Planos</button>
         <button class="nav-item" data-page="page-profile"><i class="fas fa-user"></i> Perfil</button>
     </div>
 
-    <!-- PLAYER (VERSÃO ATUALIZADA) -->
+    <!-- PLAYER -->
     <div id="video-player-modal">
         <button class="close-btn" onclick="fecharPlayer()"><i class="fas fa-times"></i></button>
-        <video id="main-video" controls autoplay controlsList="nodownload" playsinline>
-            <source src="" type="video/mp4">
-            O teu navegador não suporta a reprodução de vídeos.
-        </video>
+        <div class="player-container">
+            <video id="main-video" controls autoplay playsinline style="display:none; width:100%; max-height:65vh; background:#000;">
+                <source src="" type="video/mp4">
+                O teu navegador não suporta a reprodução de vídeos.
+            </video>
+            <iframe id="youtube-iframe" style="display:none; width:100%; height:300px; border:none;" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        </div>
         <div class="player-info">
-            <h3 id="player-video-title">Título do Filme</h3>
-            <p id="player-status-message"><i class="fas fa-info-circle"></i> A transmitir em Qualidade Automática (Otimizado para redes móveis).</p>
+            <h3 id="player-video-title">Título</h3>
+            <p id="player-status-message"><i class="fas fa-info-circle"></i> A transmitir...</p>
         </div>
     </div>
 
@@ -801,7 +960,7 @@
         <div class="modal-box">
             <i class="fas fa-crown"></i>
             <h3>🔒 Conteúdo Premium</h3>
-            <p>Este filme está disponível apenas para assinantes.<br>Assine um plano para desbloquear todos os conteúdos.</p>
+            <p>Este conteúdo está disponível apenas para assinantes.<br>Assine um plano para desbloquear.</p>
             <button class="btn-primary" onclick="document.getElementById('premium-warning-modal').style.display='none'; showPage('page-plans')">
                 <i class="fas fa-tags"></i> Ver Planos
             </button>
@@ -811,61 +970,230 @@
         </div>
     </div>
 
-    <!-- ADMIN (com senha) -->
+    <!-- ADMIN -->
     <div id="admin-panel">
         <button class="admin-close" onclick="document.getElementById('admin-panel').style.display='none'">✕ Fechar</button>
-        <h2><i class="fas fa-upload"></i> Adicionar Filme</h2>
-        <input id="movie-title" placeholder="Título do Filme" value="O Meu Filme">
-        <input id="movie-poster" placeholder="URL da Capa (ex: https://i.imgur.com/...jpg)" value="https://picsum.photos/seed/novo/200/300">
-        <input id="movie-video" placeholder="URL do Vídeo (ex: https://meusite.com/filme.mp4)" value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">
-        <select id="movie-genre">
-            <option value="Ação">Ação</option>
-            <option value="Comédia">Comédia</option>
-            <option value="Drama">Drama</option>
-            <option value="Romance">Romance</option>
-            <option value="Suspense">Suspense</option>
-            <option value="Seriado">Seriado</option>
-            <option value="Dorama">Dorama</option>
-            <option value="Novela">Novela</option>
-            <option value="Anime">Anime</option>
-            <option value="Documentário">Documentário</option>
-            <option value="Outro" selected>Outro</option>
-        </select>
-        <input id="movie-country" placeholder="País (ex: Moçambique, Brasil, EUA)" value="Moçambique">
-        <div class="admin-checkbox">
-            <input type="checkbox" id="movie-premium">
-            <label for="movie-premium">🔒 Apenas Premium (assinantes)</label>
+        <h2><i class="fas fa-cog"></i> Painel de Controlo</h2>
+        <div class="admin-section">
+            <h3>📽️ Adicionar Filme / Série</h3>
+            <input id="movie-title" placeholder="Título" value="">
+            <input id="movie-poster" placeholder="URL da Capa" value="https://picsum.photos/seed/novo/200/300">
+            <input id="movie-video" placeholder="URL do Vídeo (MP4 ou YouTube)" value="https://www.w3schools.com/html/mov_bbb.mp4">
+            <select id="movie-genre">
+                <option value="Ação">Ação</option>
+                <option value="Comédia">Comédia</option>
+                <option value="Drama">Drama</option>
+                <option value="Romance">Romance</option>
+                <option value="Suspense">Suspense</option>
+                <option value="Seriado">Seriado</option>
+                <option value="Dorama">Dorama</option>
+                <option value="Novela">Novela</option>
+                <option value="Anime">Anime</option>
+                <option value="Documentário">Documentário</option>
+                <option value="Outro" selected>Outro</option>
+            </select>
+            <input id="movie-country" placeholder="País" value="Moçambique">
+            <input id="movie-series" placeholder="Nome da Série" value="">
+            <input id="movie-season" placeholder="Temporada" value="1" type="number">
+            <input id="movie-episode" placeholder="Episódio" value="1" type="number">
+            <input id="movie-group" placeholder="Grupo de Filmes" value="">
+            <div class="admin-checkbox">
+                <input type="checkbox" id="movie-premium">
+                <label for="movie-premium">🔒 Apenas Premium</label>
+            </div>
+            <button class="admin-save" onclick="saveMovie()"><i class="fas fa-save"></i> Salvar Filme</button>
+            <div id="admin-msg" style="margin-top:6px; color:#aaa; font-size:12px;"></div>
         </div>
-        <button class="admin-save" onclick="saveMovie()"><i class="fas fa-save"></i> Salvar Filme</button>
-        <div id="admin-msg" style="margin-top:10px; color:#aaa;"></div>
-        <hr style="border-color:#2c2c2e; margin: 20px 0;">
-        <h3 style="color:#aaa;">📋 Meus Filmes Cadastrados</h3>
-        <div id="admin-list"></div>
+        <div class="admin-section">
+            <h3>🎬 Meus Filmes / Séries</h3>
+            <div id="admin-list"></div>
+        </div>
+        <div class="admin-section">
+            <h3>👥 Utilizadores Registados</h3>
+            <div id="admin-users-list"></div>
+        </div>
     </div>
 </div>
 
 <script>
     // ================================================================
+    //  SERVICE WORKER (PWA)
+    // ================================================================
+    (function registerSW() {
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', function(e) {
+                    e.waitUntil(
+                        caches.open('mozfilmes-v4').then(function(cache) {
+                            return cache.addAll(['/', '/index.html']);
+                        })
+                    );
+                });
+                self.addEventListener('fetch', function(e) {
+                    e.respondWith(
+                        caches.match(e.request).then(function(response) {
+                            return response || fetch(e.request);
+                        })
+                    );
+                });
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl)
+                .then(() => console.log('Service Worker registado!'))
+                .catch(err => console.error('SW falhou:', err));
+        }
+    })();
+
+    // ================================================================
+    //  INSTALAÇÃO PWA
+    // ================================================================
+    let deferredPrompt = null;
+    const installContainer = document.getElementById('install-container');
+    const installBtn = document.getElementById('install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installContainer.style.display = 'block';
+        installBtn.addEventListener('click', () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(() => {
+                installContainer.style.display = 'none';
+                deferredPrompt = null;
+            });
+        });
+    });
+
+    window.addEventListener('appinstalled', () => {
+        installContainer.style.display = 'none';
+        console.log('MOZFilmes instalado!');
+    });
+
+    // ================================================================
+    //  DADOS INICIAIS (FORÇA RECRIAÇÃO)
+    // ================================================================
+    function initDatabase() {
+        // Forçar recriação dos dados para garantir que as contas padrão existem
+        const defaultUsers = [
+            { id: 'admin1', name: 'Administrador', email: 'admin@mozfilmes.com', password: 'Admin123!', phone: '870544332', isAdmin: true, plan: null, planExpiry: null },
+            { id: 'user1', name: 'Joaquim Duarte', email: 'joaquim@mozfilmes.com', password: '123456', phone: '841234567', isAdmin: false, plan: null, planExpiry: null },
+            { id: 'user2', name: 'Amigo', email: 'amigo@mozfilmes.com', password: '123456', phone: '842345678', isAdmin: false, plan: null, planExpiry: null }
+        ];
+
+        // Se não houver utilizadores, cria os padrão
+        if (!localStorage.getItem('moz_users')) {
+            localStorage.setItem('moz_users', JSON.stringify(defaultUsers));
+        } else {
+            // Verifica se o admin existe, senão adiciona
+            let users = JSON.parse(localStorage.getItem('moz_users'));
+            const adminExists = users.some(u => u.email === 'admin@mozfilmes.com');
+            if (!adminExists) {
+                users.push(defaultUsers[0]);
+                localStorage.setItem('moz_users', JSON.stringify(users));
+            }
+        }
+
+        // Filmes
+        const defaultMovies = [
+            { id: 'd1', title: 'Winter is Coming', poster: 'https://picsum.photos/seed/got1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 1, group: '' },
+            { id: 'd2', title: 'The Kingsroad', poster: 'https://picsum.photos/seed/got2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 2, group: '' },
+            { id: 'd3', title: 'Lord Snow', poster: 'https://picsum.photos/seed/got3/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 3, group: '' },
+            { id: 'd4', title: 'The North Remembers', poster: 'https://picsum.photos/seed/got4/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 2, episode: 1, group: '' },
+            { id: 'd5', title: 'The Night Lands', poster: 'https://picsum.photos/seed/got5/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 2, episode: 2, group: '' },
+            { id: 'd6', title: 'Chapter One: The Vanishing', poster: 'https://picsum.photos/seed/st1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: false, series: 'Stranger Things', season: 1, episode: 1, group: '' },
+            { id: 'd7', title: 'Chapter Two: The Weirdo', poster: 'https://picsum.photos/seed/st2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: false, series: 'Stranger Things', season: 1, episode: 2, group: '' },
+            { id: 'd8', title: 'The Heirs of the Dragon', poster: 'https://picsum.photos/seed/hotd1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'A Casa do Dragão', season: 1, episode: 1, group: '' },
+            { id: 'd9', title: 'The Rogue Prince', poster: 'https://picsum.photos/seed/hotd2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'A Casa do Dragão', season: 1, episode: 2, group: '' },
+            { id: 'd10', title: 'O Predador (1987)', poster: 'https://picsum.photos/seed/pred1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador' },
+            { id: 'd11', title: 'O Predador 2 (1990)', poster: 'https://picsum.photos/seed/pred2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador' },
+            { id: 'd12', title: 'Predadores (2010)', poster: 'https://picsum.photos/seed/pred3/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador' },
+            { id: 'd13', title: 'Maputo Connection', poster: 'https://picsum.photos/seed/moz1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'Moçambique', premiumOnly: false, series: '', season: 0, episode: 0, group: '' },
+            { id: 'd14', title: 'Xiconhoca', poster: 'https://picsum.photos/seed/moz2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Comédia', country: 'Moçambique', premiumOnly: false, series: '', season: 0, episode: 0, group: '' },
+            { id: 'd15', title: 'Naruto - O Filme', poster: 'https://picsum.photos/seed/anime1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Anime', country: 'Japão', premiumOnly: true, series: '', season: 0, episode: 0, group: '' }
+        ];
+        if (!localStorage.getItem('moz_movies')) {
+            localStorage.setItem('moz_movies', JSON.stringify(defaultMovies));
+        }
+    }
+    initDatabase();
+
+    // ================================================================
+    //  CONTROLO DO MENU
+    // ================================================================
+    function updateMenuVisibility() {
+        const user = getCurrentUser();
+        const bottomNav = document.getElementById('bottomNav');
+        const currentPage = document.querySelector('.page.active');
+        if (bottomNav) {
+            // Se estiver na página de login ou registo, oculta sempre
+            if (currentPage && (currentPage.id === 'page-login' || currentPage.id === 'page-register')) {
+                bottomNav.classList.remove('show');
+                return;
+            }
+            // Caso contrário, mostra apenas se houver utilizador
+            if (user) {
+                bottomNav.classList.add('show');
+            } else {
+                bottomNav.classList.remove('show');
+            }
+        }
+    }
+
+    // ================================================================
     //  ROTAS E PÁGINAS
     // ================================================================
     function showPage(pageId) {
+        // Esconde todas as páginas
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        // Mostra a página alvo
         const target = document.getElementById(pageId);
-        if(target) target.classList.add('active');
+        if (target) {
+            target.classList.add('active');
+        } else {
+            console.error('Página não encontrada:', pageId);
+            return;
+        }
+
+        // Atualiza o item ativo no menu inferior
         document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.toggle('active', item.dataset.page === pageId);
+            const itemPage = item.getAttribute('data-page');
+            if (itemPage === pageId) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
         });
-        if(pageId === 'page-home') { updateHomeBadge(); renderMovies(); }
-        if(pageId === 'page-profile') loadProfile();
-        if(pageId === 'page-plans') renderPlans();
+
+        // Atualiza conteúdos específicos
+        if (pageId === 'page-home') {
+            updateHomeBadge();
+            renderHome();
+            renderCategories();
+            renderSeriesFilterHome();
+        }
+        if (pageId === 'page-profile') loadProfile();
+        if (pageId === 'page-plans') renderPlans();
+        if (pageId === 'page-series-list') renderSeriesList();
+
+        // Mostra/oculta menu conforme login e página
+        updateMenuVisibility();
+        // Volta ao topo
         target.scrollTop = 0;
     }
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const pageId = btn.dataset.page;
-            if(pageId) showPage(pageId);
-        });
-    });
+
+    // ================================================================
+    //  VALIDAÇÕES
+    // ================================================================
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    function isValidPhone(phone) {
+        return /^(84|85|86|87)\d{7}$/.test(phone);
+    }
+    function isValidPassword(password) {
+        return password.length >= 8;
+    }
 
     // ================================================================
     //  AUTENTICAÇÃO
@@ -874,7 +1202,7 @@
     function saveUsers(users) { localStorage.setItem('moz_users', JSON.stringify(users)); }
     function getCurrentUser() { const data = localStorage.getItem('moz_current_user'); return data ? JSON.parse(data) : null; }
     function setCurrentUser(user) { localStorage.setItem('moz_current_user', JSON.stringify(user)); }
-    function logout() { localStorage.removeItem('moz_current_user'); showPage('page-login'); }
+    function isAdmin() { const user = getCurrentUser(); return user && user.isAdmin === true; }
 
     function handleRegister() {
         const name = document.getElementById('reg-name').value.trim();
@@ -882,47 +1210,55 @@
         const phone = document.getElementById('reg-phone').value.trim();
         const password = document.getElementById('reg-password').value.trim();
         const errorEl = document.getElementById('reg-error');
-        if(!name || !email || !phone || !password) {
-            errorEl.innerText = 'Preencha todos os campos!';
-            errorEl.classList.remove('hidden');
-            return;
-        }
+
+        if(!name) { errorEl.innerText = 'Por favor, insira o seu nome.'; errorEl.classList.remove('hidden'); return; }
+        if(!isValidEmail(email)) { errorEl.innerText = 'Insira um email válido (ex: nome@dominio.com).'; errorEl.classList.remove('hidden'); return; }
+        if(!isValidPhone(phone)) { errorEl.innerText = 'Número inválido. Use 84/85/86/87 + 7 dígitos.'; errorEl.classList.remove('hidden'); return; }
+        if(!isValidPassword(password)) { errorEl.innerText = 'A palavra-passe deve ter no mínimo 8 caracteres.'; errorEl.classList.remove('hidden'); return; }
+
         let users = getUsers();
-        if(users.find(u => u.email === email)) {
-            errorEl.innerText = 'Email já registado!';
-            errorEl.classList.remove('hidden');
-            return;
-        }
-        const newUser = { id: Date.now().toString(), name, email, phone, password, plan: null, planExpiry: null };
+        if(users.find(u => u.email === email)) { errorEl.innerText = 'Este email já está registado!'; errorEl.classList.remove('hidden'); return; }
+        if(users.find(u => u.phone === phone)) { errorEl.innerText = 'Este número já está registado!'; errorEl.classList.remove('hidden'); return; }
+
+        const newUser = { id: Date.now().toString(), name, email, phone, password, isAdmin: false, plan: null, planExpiry: null };
         users.push(newUser);
         saveUsers(users);
         setCurrentUser(newUser);
         errorEl.classList.add('hidden');
         showPage('page-home');
-        updateHomeBadge();
-        renderMovies();
-        renderCategories();
     }
 
     function handleLogin() {
-        const email = document.getElementById('login-email').value.trim();
+        const input = document.getElementById('login-email-or-phone').value.trim();
         const password = document.getElementById('login-password').value.trim();
         const errorEl = document.getElementById('login-error');
-        const users = getUsers();
-        const found = users.find(u => u.email === email && u.password === password);
+
+        if(!input) { errorEl.innerText = 'Insira o email ou telemóvel.'; errorEl.classList.remove('hidden'); return; }
+        if(!isValidPassword(password)) { errorEl.innerText = 'Palavra-passe deve ter no mínimo 8 caracteres.'; errorEl.classList.remove('hidden'); return; }
+
+        let users = getUsers();
+        let found = users.find(u => u.email === input);
+        if (!found) found = users.find(u => u.phone === input);
+
         if(found) {
-            setCurrentUser(found);
-            errorEl.classList.add('hidden');
-            showPage('page-home');
-            updateHomeBadge();
-            renderMovies();
-            renderCategories();
+            if (found.password === password) {
+                setCurrentUser(found);
+                errorEl.classList.add('hidden');
+                showPage('page-home');
+            } else {
+                errorEl.innerText = 'Palavra-passe incorreta!';
+                errorEl.classList.remove('hidden');
+            }
         } else {
-            errorEl.innerText = 'Email ou palavra-passe incorretos!';
+            errorEl.innerText = 'Utilizador não encontrado. Verifique o email ou telemóvel.';
             errorEl.classList.remove('hidden');
         }
     }
-    function handleLogout() { logout(); }
+
+    function handleLogout() { 
+        localStorage.removeItem('moz_current_user'); 
+        showPage('page-login'); 
+    }
 
     // ================================================================
     //  VERIFICAÇÃO DE PLANO
@@ -960,13 +1296,13 @@
     }
 
     // ================================================================
-    //  PLANOS
+    //  PLANOS E CHECKOUT
     // ================================================================
     const PLANS = [
-        { id: 'p1', name: 'Diário', price: 5, durationDays: 1, desc: 'Teste por 24h' },
-        { id: 'p2', name: 'Semanal', price: 25, durationDays: 7, desc: 'Melhor custo-benefício' },
-        { id: 'p3', name: 'Mensal', price: 90, durationDays: 30, desc: 'Acesso total + downloads' },
-        { id: 'p4', name: 'Anual', price: 850, durationDays: 365, desc: '2 meses grátis!' }
+        { id: 'p1', name: 'Diário', price: 5, durationDays: 1, desc: 'Teste por 24h', paymentLink: 'https://zumbopay.com/pay/plano-a-iko' },
+        { id: 'p2', name: 'Semanal', price: 25, durationDays: 7, desc: 'Melhor custo-benefício', paymentLink: 'https://zumbopay.com/pay/plano-b-hii' },
+        { id: 'p3', name: 'Mensal', price: 90, durationDays: 30, desc: 'Acesso total + downloads', paymentLink: 'https://zumbopay.com/pay/plano-3-q6y' },
+        { id: 'p4', name: 'Anual', price: 850, durationDays: 365, desc: '2 meses grátis!', paymentLink: 'https://zumbopay.com/pay/plano-d-sja' }
     ];
     let selectedPlanId = null;
 
@@ -979,7 +1315,7 @@
             card.innerHTML = `
                 <div class="top"><h3>${plan.name}</h3><span class="price">${plan.price} <small>MZN</small></span></div>
                 <p class="desc">${plan.desc} (${plan.durationDays} dias)</p>
-                <button class="btn-plan" onclick="selectPlan('${plan.id}')"><i class="fas fa-mobile-alt"></i> Assinar com e-Mola</button>
+                <button class="btn-plan" onclick="selectPlan('${plan.id}')"><i class="fas fa-external-link-alt"></i> Assinar com ZumpoPay</button>
             `;
             container.appendChild(card);
         });
@@ -991,111 +1327,14 @@
         if(!plan) return;
         document.getElementById('checkout-plan-name').innerText = plan.name;
         document.getElementById('checkout-amount').innerText = plan.price + ' MZN';
-        document.getElementById('qr-section').innerHTML = '';
         document.getElementById('checkout-status').innerHTML = '';
-        document.getElementById('btn-pay-emola').disabled = false;
-        document.getElementById('btn-pay-emola').innerHTML = `<i class="fas fa-mobile-alt"></i> Pagar com ${document.getElementById('wallet-type').value}`;
         showPage('page-checkout');
     }
 
-    // ================================================================
-    //  CHECKOUT AVANÇADO (STK PUSH SIMULADO)
-    // ================================================================
-    const RECEIVER_PHONE = '870544332';
-
-    document.getElementById('wallet-type').addEventListener('change', function() {
-        document.getElementById('wallet-label').innerText = this.value;
-    });
-
-    async function generatePaymentRef() {
-        const phone = document.getElementById('checkout-phone').value.trim();
-        const wallet = document.getElementById('wallet-type').value;
-        const qrSection = document.getElementById('qr-section');
-        const statusDiv = document.getElementById('checkout-status');
-        const btn = document.getElementById('btn-pay-emola');
-
-        const phoneRegex = /^(84|85|86|87)\d{7}$/;
-        if (!phoneRegex.test(phone)) {
-            statusDiv.innerHTML = `<div class="toast error"><i class="fas fa-exclamation-circle"></i> Número inválido. Use 84/85 para M-Pesa ou 86/87 para e-Mola.</div>`;
-            return;
-        }
-
+    function redirectToPayment() {
         const plan = PLANS.find(p => p.id === selectedPlanId);
-        if (!plan) { alert('Selecione um plano primeiro.'); return; }
-
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> A enviar...';
-        statusDiv.innerHTML = '';
-        qrSection.classList.remove('hidden');
-        qrSection.innerHTML = `
-            <div style="text-align:center; padding:10px;">
-                <i class="fas fa-spinner fa-spin" style="font-size:30px; color:#f1c40f;"></i>
-                <p style="color:#f1c40f; font-weight:bold; margin-top:8px;">Enviando pedido de PIN para o seu telemóvel...</p>
-                <div style="background:#141414; padding:15px; border-radius:8px; margin-top:10px; color:#aaa; font-size:14px;">
-                    Verifique o seu telemóvel <strong>${phone}</strong>.<br>
-                    Introduza o PIN do <strong>${wallet}</strong> para autorizar o débito de <strong>${plan.price} MZN</strong>.
-                    <br><small>Simulação: a confirmação ocorrerá em 5 segundos.</small>
-                </div>
-            </div>
-        `;
-
-        try {
-            await verificarStatusPagamento(phone, plan.price);
-            ativarSubscricaoPremium();
-        } catch (error) {
-            qrSection.innerHTML = `
-                <div style="text-align:center; padding:10px;">
-                    <i class="fas fa-times-circle" style="font-size:30px; color:#e74c3c;"></i>
-                    <p style="color:#e74c3c; font-weight:bold; margin-top:8px;">O pagamento falhou ou expirou.</p>
-                    <button class="btn-primary" onclick="generatePaymentRef()" style="margin-top:10px;">Tentar Novamente</button>
-                </div>
-            `;
-            btn.disabled = false;
-            btn.innerHTML = `<i class="fas fa-mobile-alt"></i> Pagar com ${wallet}`;
-        }
-    }
-
-    function verificarStatusPagamento(msisdn, valor) {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const sucessoAPI = Math.random() > 0.1;
-                if (sucessoAPI) resolve(true);
-                else reject(false);
-            }, 5000);
-        });
-    }
-
-    function ativarSubscricaoPremium() {
-        const plan = PLANS.find(p => p.id === selectedPlanId);
-        if(!plan) return;
-        const user = getCurrentUser();
-        if(!user) { alert('Utilizador não encontrado.'); return; }
-
-        const now = new Date();
-        const expiry = new Date(now);
-        expiry.setDate(expiry.getDate() + plan.durationDays);
-        const users = getUsers();
-        const idx = users.findIndex(u => u.id === user.id);
-        if(idx !== -1) {
-            users[idx].plan = plan.name;
-            users[idx].planExpiry = expiry.toISOString();
-            saveUsers(users);
-            setCurrentUser(users[idx]);
-        }
-
-        const qrSection = document.getElementById('qr-section');
-        qrSection.innerHTML = `
-            <div style="text-align:center; padding:10px; color:#00b894;">
-                <i class="fas fa-check-circle" style="font-size:40px;"></i>
-                <p style="font-weight:bold; margin-top:8px;">Subscrição Ativada com Sucesso!</p>
-                <p style="color:#aaa; font-size:14px;">Plano ${plan.name} ativo até ${expiry.toLocaleDateString('pt-MZ')}</p>
-                <small>Pagamento para: ${RECEIVER_PHONE}</small>
-            </div>
-        `;
-        document.getElementById('btn-pay-emola').disabled = true;
-        document.getElementById('btn-pay-emola').innerHTML = '<i class="fas fa-check"></i> Pago';
-        updateHomeBadge();
-        setTimeout(() => showPage('page-home'), 2500);
+        if(!plan) { alert('Selecione um plano primeiro.'); return; }
+        window.location.href = plan.paymentLink;
     }
 
     // ================================================================
@@ -1125,31 +1364,32 @@
     }
 
     // ================================================================
-    //  CATEGORIAS E FILMES (COM BLOQUEIO PREMIUM)
+    //  CATEGORIAS E FILMES
     // ================================================================
-    const DEFAULT_MOVIES = [
-        { id: 'd1', title: 'O Predador', poster: 'https://picsum.photos/seed/movie1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true },
-        { id: 'd2', title: 'Njinga Mbande', poster: 'https://picsum.photos/seed/movie2/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Seriado', country: 'Angola', premiumOnly: false },
-        { id: 'd3', title: 'Maputo Connection', poster: 'https://picsum.photos/seed/movie3/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Ação', country: 'Moçambique', premiumOnly: false },
-        { id: 'd4', title: 'Xiconhoca', poster: 'https://picsum.photos/seed/movie4/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Comédia', country: 'Moçambique', premiumOnly: false },
-        { id: 'd5', title: 'Mar Azul', poster: 'https://picsum.photos/seed/movie5/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Drama', country: 'Brasil', premiumOnly: false },
-        { id: 'd6', title: 'Fogos de Artifício', poster: 'https://picsum.photos/seed/movie6/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Romance', country: 'Brasil', premiumOnly: false },
-        { id: 'd7', title: 'Naruto - O Filme', poster: 'https://picsum.photos/seed/anime1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Anime', country: 'Japão', premiumOnly: true },
-        { id: 'd8', title: 'A Casa do Dragão', poster: 'https://picsum.photos/seed/serie1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true },
-        { id: 'd9', title: 'Meu Amor de Verão', poster: 'https://picsum.photos/seed/dorama1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Dorama', country: 'Coreia do Sul', premiumOnly: false },
-        { id: 'd10', title: 'A Força do Querer', poster: 'https://picsum.photos/seed/novela1/200/300', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Novela', country: 'Brasil', premiumOnly: false }
-    ];
-
     let selectedCountry = 'Todos';
     let selectedGenre = 'Todos';
+    let selectedSeriesFilter = 'Todos';
     let movieList = [];
 
     function getMovies() {
         const saved = JSON.parse(localStorage.getItem('moz_movies') || '[]');
         if (saved && saved.length > 0) {
-            return saved.map(m => ({ ...m, premiumOnly: m.premiumOnly || false }));
+            return saved.map(m => ({ 
+                ...m, 
+                premiumOnly: m.premiumOnly || false, 
+                series: m.series || '', 
+                season: m.season || 0, 
+                episode: m.episode || 0,
+                group: m.group || ''
+            }));
         }
-        return DEFAULT_MOVIES;
+        return [];
+    }
+
+    function getUniqueSeries(movies) {
+        const series = new Set();
+        movies.forEach(m => { if(m.series && m.series.trim() !== '') series.add(m.series.trim()); });
+        return ['Todos', ...Array.from(series).sort()];
     }
 
     function getUniqueCountries(movies) {
@@ -1170,6 +1410,25 @@
             'Coreia do Sul': '🇰🇷', 'Nigéria': '🇳🇬', 'Índia': '🇮🇳'
         };
         return map[country] || '🏳️';
+    }
+
+    function renderSeriesFilterHome() {
+        const container = document.getElementById('seriesFilterHome');
+        if(!container) return;
+        const movies = getMovies();
+        const seriesList = getUniqueSeries(movies);
+        container.innerHTML = seriesList.map(s => `
+            <div class="filter-pill ${s === selectedSeriesFilter ? 'active' : ''}" onclick="selectSeriesFilter('${s}')">
+                ${s === 'Todos' ? '📺 Todas' : s}
+            </div>
+        `).join('');
+    }
+
+    function selectSeriesFilter(value) {
+        selectedSeriesFilter = value;
+        renderSeriesFilterHome();
+        renderHome();
+        updateTitle();
     }
 
     function renderCategories() {
@@ -1195,149 +1454,152 @@
         if(type === 'country') selectedCountry = value;
         else if(type === 'genre') selectedGenre = value;
         renderCategories();
-        renderMovies();
+        renderHome();
         updateTitle();
     }
 
     function updateTitle() {
         const title = document.getElementById('categoryTitle');
         let parts = [];
+        if(selectedSeriesFilter !== 'Todos') parts.push(selectedSeriesFilter);
         if(selectedCountry !== 'Todos') parts.push(selectedCountry);
         if(selectedGenre !== 'Todos') parts.push(selectedGenre);
         title.innerText = parts.length ? `🎬 ${parts.join(' - ')}` : '🎬 Todos os Filmes';
     }
 
-    // ========== FAVORITOS ==========
     function toggleFavorite(event, movieId) {
         event.stopPropagation();
         const key = `fav_${movieId}`;
         const isFav = localStorage.getItem(key) === 'true';
         if (isFav) localStorage.removeItem(key);
         else localStorage.setItem(key, 'true');
-        renderMovies();
+        renderHome();
     }
 
-    // ========== ACESSO PREMIUM ==========
     function temAcessoPremium() {
         const status = checkPlanStatus();
         return status !== null;
     }
 
     // ================================================================
-    //  PLAYER ATUALIZADO (COM TRATAMENTO DE ERROS)
+    //  PLAYER
     // ================================================================
-    function abrirPlayer(index) {
-        const movie = movieList[index];
+    function abrirPlayer(index, list) {
+        const movie = list[index];
         if (!movie) {
-            console.error('Filme não encontrado no índice', index);
+            alert('Erro: filme não encontrado.');
             return;
         }
-
         if (movie.premiumOnly && !temAcessoPremium()) {
             document.getElementById('premium-warning-modal').style.display = 'flex';
             return;
         }
 
+        const videoUrl = movie.video && movie.video.trim() !== '' ? movie.video.trim() : 'https://www.w3schools.com/html/mov_bbb.mp4';
+        
+        if (videoUrl.includes('drive.google.com') || videoUrl.includes('googleusercontent.com') || videoUrl.includes('drive.google')) {
+            alert('⚠️ O Google Drive bloqueia a reprodução de vídeos no MOZFilmes.\n\nUse um link do YouTube ou faça upload no Cloudinary/Streamable.');
+            return;
+        }
+
+        const isYouTube = videoUrl.includes('youtube.com/watch') || videoUrl.includes('youtu.be/');
+        
         const modal = document.getElementById('video-player-modal');
-        const video = document.getElementById('main-video');
+        const videoEl = document.getElementById('main-video');
+        const iframeEl = document.getElementById('youtube-iframe');
         const titleEl = document.getElementById('player-video-title');
         const statusEl = document.getElementById('player-status-message');
 
-        // Limpa eventos anteriores
-        video.onerror = null;
-        video.onloadeddata = null;
+        videoEl.style.display = 'none';
+        iframeEl.style.display = 'none';
+        videoEl.pause();
+        videoEl.src = '';
+        iframeEl.src = '';
 
-        // Define título
         titleEl.innerText = movie.title;
 
-        // Mostra estado de carregamento
-        statusEl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#f1c40f;"></i> A carregar o vídeo...`;
-
-        // Define a URL do vídeo (usa fallback se estiver vazia)
-        const videoUrl = (movie.video && movie.video.trim() !== '') 
-            ? movie.video.trim() 
-            : 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-        
-        video.src = videoUrl;
-        video.load(); // Força o carregamento
-
-        // Mostra o modal
-        modal.style.display = 'flex';
-
-        // --- EVENTO DE SUCESSO ---
-        video.onloadeddata = function() {
-            statusEl.innerHTML = `<i class="fas fa-check-circle" style="color:#00b894;"></i> A transmitir em Qualidade Automática (Otimizado para redes móveis).`;
-            video.play().catch(e => console.log('Autoplay bloqueado:', e));
-        };
-
-        // --- EVENTO DE ERRO ---
-        video.onerror = function(e) {
-            console.error('Erro no vídeo:', e);
-            let erroMsg = 'Não foi possível reproduzir o vídeo.';
-            
-            // Tenta identificar o erro
-            const errorCode = video.error ? video.error.code : -1;
-            if (errorCode === 1) erroMsg = 'O carregamento do vídeo foi cancelado.';
-            else if (errorCode === 2) erroMsg = 'Ocorreu um erro de rede. Verifique a sua ligação.';
-            else if (errorCode === 3) erroMsg = 'O vídeo foi interrompido durante a descarga.';
-            else if (errorCode === 4) erroMsg = 'Formato de vídeo não suportado ou URL inválida.';
-            
-            // Verifica se é erro de CORS (Google Drive/Streamable)
-            if (videoUrl.includes('googleusercontent') || videoUrl.includes('drive.google')) {
-                erroMsg += ' O Google Drive bloqueia a reprodução direta. Experimente usar Streamable ou Cloudinary.';
-            } else if (videoUrl.includes('streamable')) {
-                erroMsg += ' Verifique se o link do Streamable é o correto. Tente usar o link de partilha normal.';
+        if (isYouTube) {
+            let videoId = '';
+            if (videoUrl.includes('youtu.be/')) {
+                videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+            } else {
+                videoId = videoUrl.split('v=')[1]?.split('&')[0] || '';
             }
+            if (videoId) {
+                iframeEl.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                iframeEl.style.display = 'block';
+                statusEl.innerHTML = `<i class="fab fa-youtube" style="color:#ff0000;"></i> A reproduzir via YouTube`;
+            } else {
+                statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Link do YouTube inválido.`;
+            }
+        } else {
+            videoEl.style.display = 'block';
+            videoEl.src = videoUrl;
+            videoEl.load();
+            statusEl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#f1c40f;"></i> A carregar...`;
 
-            statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> ${erroMsg}`;
-            
-            // Botão para tentar novamente
-            const tryBtn = document.createElement('button');
-            tryBtn.innerText = '🔁 Tentar novamente';
-            tryBtn.className = 'btn-primary';
-            tryBtn.style.marginTop = '10px';
-            tryBtn.onclick = function() {
-                // Remove o botão antigo e recarrega
-                this.remove();
-                statusEl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#f1c40f;"></i> A recarregar...`;
-                video.src = videoUrl;
-                video.load();
+            videoEl.onloadeddata = function() {
+                statusEl.innerHTML = `<i class="fas fa-check-circle" style="color:#00b894;"></i> A transmitir...`;
+                videoEl.play().catch(e => console.log('Autoplay bloqueado:', e));
             };
-            statusEl.appendChild(tryBtn);
-        };
+
+            videoEl.onerror = function() {
+                statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Erro ao carregar o vídeo. Verifique o link.`;
+            };
+        }
+
+        modal.style.display = 'flex';
     }
 
     function fecharPlayer() {
         const modal = document.getElementById('video-player-modal');
-        const video = document.getElementById('main-video');
-        const statusEl = document.getElementById('player-status-message');
-        
-        video.pause();
-        video.src = '';
-        video.onerror = null;
-        video.onloadeddata = null;
+        const videoEl = document.getElementById('main-video');
+        const iframeEl = document.getElementById('youtube-iframe');
+        videoEl.pause();
+        videoEl.src = '';
+        iframeEl.src = '';
+        videoEl.onerror = null;
+        videoEl.onloadeddata = null;
         modal.style.display = 'none';
-        
-        // Restaura mensagem padrão
-        statusEl.innerHTML = `<i class="fas fa-info-circle"></i> A transmitir em Qualidade Automática (Otimizado para redes móveis).`;
     }
 
-    // ========== RENDER FILMES ==========
-    function renderMovies() {
+    // ================================================================
+    //  RENDERIZAÇÃO DA HOME
+    // ================================================================
+    function renderHome() {
         const grid = document.getElementById('movieGrid');
         if(!grid) return;
         const allMovies = getMovies();
         let filtered = allMovies;
-        if(selectedCountry !== 'Todos') filtered = filtered.filter(m => m.country === selectedCountry);
-        if(selectedGenre !== 'Todos') filtered = filtered.filter(m => m.genre === selectedGenre);
+
+        if(selectedSeriesFilter !== 'Todos') {
+            filtered = filtered.filter(m => m.series && m.series.trim() === selectedSeriesFilter);
+        }
+        if(selectedCountry !== 'Todos') {
+            filtered = filtered.filter(m => m.country === selectedCountry);
+        }
+        if(selectedGenre !== 'Todos') {
+            filtered = filtered.filter(m => m.genre === selectedGenre);
+        }
         const search = document.getElementById('searchInput').value.toLowerCase().trim();
         if(search) filtered = filtered.filter(m => m.title.toLowerCase().includes(search));
+
+        filtered.sort((a, b) => {
+            if (a.series && !b.series) return -1;
+            if (!a.series && b.series) return 1;
+            if (a.series && b.series) {
+                if (a.series !== b.series) return a.series.localeCompare(b.series);
+                if (a.season !== b.season) return a.season - b.season;
+                return a.episode - b.episode;
+            }
+            return a.title.localeCompare(b.title);
+        });
 
         movieList = filtered;
 
         if(filtered.length === 0) {
-            grid.innerHTML = `<p style="color:#666; grid-column: span 2; text-align:center; padding:20px;">
-                Nenhum filme encontrado.<br>Toque 5x no título para administrar.
+            grid.innerHTML = `<p style="color:#666; grid-column: span 2; text-align:center; padding:20px; font-size:13px;">
+                Nenhum filme encontrado.
             </p>`;
             return;
         }
@@ -1348,9 +1610,19 @@
             const isFav = localStorage.getItem(`fav_${m.id}`) === 'true';
             const heartClass = isFav ? 'fas fa-heart active' : 'far fa-heart';
             const isLocked = m.premiumOnly && !isPremium;
+            const episodeInfo = (m.series && m.series.trim() !== '') ? `S${m.season || 1} E${m.episode || 1}` : '';
+            const isSeries = m.series && m.series.trim() !== '';
+            const hasGroup = m.group && m.group.trim() !== '';
+
+            let clickAction = `abrirPlayer(${index}, movieList)`;
+            if (isSeries && m.episode === 1 && m.season === 1) {
+                clickAction = `openSeriesSeasons('${m.series}')`;
+            } else if (hasGroup && m.episode === 0 && m.season === 0) {
+                clickAction = `openGroupMovies('${m.group}')`;
+            }
 
             return `
-                <div class="movie-card" onclick="abrirPlayer(${index})">
+                <div class="movie-card" onclick="${clickAction}">
                     <img src="${m.poster}" alt="${m.title}" loading="lazy" onerror="this.src='https://picsum.photos/seed/error/200/300'">
                     ${isLocked ? `
                         <div class="premium-overlay">
@@ -1359,38 +1631,166 @@
                         </div>
                     ` : ''}
                     <div class="info">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1px;">
                             <h4 style="max-width:80%;">${m.title} ${isLocked ? '🔒' : ''}</h4>
                             <i class="${heartClass} fav-icon" onclick="toggleFavorite(event, '${m.id}')"></i>
                         </div>
+                        ${episodeInfo ? `<div class="episode-info">📺 ${m.series} - ${episodeInfo}</div>` : ''}
+                        ${hasGroup && !isSeries ? `<div class="episode-info">📽️ ${m.group}</div>` : ''}
                         <div class="meta">
                             <span>${m.genre || 'Destaque'}</span>
                             <span class="country-flag">${getFlagEmoji(m.country)}</span>
                         </div>
                     </div>
                     ${isLocked ? `<div class="premium-lock"><i class="fas fa-crown"></i> Premium</div>` : ''}
+                    ${isSeries ? `<div class="premium-lock" style="background:#00b894; color:#fff; top:auto; bottom:4px;">📺 Série</div>` : ''}
+                    ${hasGroup && !isSeries ? `<div class="premium-lock" style="background:#f1c40f; color:#000; top:auto; bottom:4px;">🎬 Grupo</div>` : ''}
                 </div>
             `;
         }).join('');
     }
 
     // ================================================================
-    //  ADMIN COM SENHA
+    //  NAVEGAÇÃO POR SÉRIES
+    // ================================================================
+    function renderSeriesList() {
+        const grid = document.getElementById('seriesGrid');
+        if(!grid) return;
+        const allMovies = getMovies();
+        const seriesSet = new Set();
+        allMovies.forEach(m => { if(m.series && m.series.trim() !== '') seriesSet.add(m.series.trim()); });
+        const seriesList = Array.from(seriesSet).sort();
+
+        if(seriesList.length === 0) {
+            grid.innerHTML = `<p style="color:#666; grid-column: span 2; text-align:center; padding:20px;">Nenhuma série disponível.</p>`;
+            return;
+        }
+
+        grid.innerHTML = seriesList.map(s => `
+            <div class="movie-card" onclick="openSeriesSeasons('${s}')">
+                <img src="https://picsum.photos/seed/${s}/200/300" alt="${s}" loading="lazy">
+                <div class="info">
+                    <h4>${s}</h4>
+                    <p style="color:#888; font-size:11px;">📺 ${allMovies.filter(m => m.series === s).length} episódios</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openSeriesSeasons(seriesName) {
+        const allMovies = getMovies();
+        const seasons = new Set();
+        allMovies.forEach(m => { if(m.series === seriesName && m.season > 0) seasons.add(m.season); });
+        const seasonList = Array.from(seasons).sort((a,b) => a-b);
+
+        document.getElementById('seasons-title').innerText = `${seriesName} - Temporadas`;
+        const grid = document.getElementById('seasonsGrid');
+        if(seasonList.length === 0) {
+            grid.innerHTML = `<p style="color:#666;">Nenhuma temporada encontrada.</p>`;
+        } else {
+            grid.innerHTML = seasonList.map(s => `
+                <div class="season-card" onclick="openSeasonEpisodes('${seriesName}', ${s})">
+                    <h3>Temporada ${s}</h3>
+                    <p>${allMovies.filter(m => m.series === seriesName && m.season === s).length} episódios</p>
+                </div>
+            `).join('');
+        }
+        showPage('page-seasons');
+    }
+
+    function openSeasonEpisodes(seriesName, season) {
+        const allMovies = getMovies();
+        const episodes = allMovies.filter(m => m.series === seriesName && m.season === season)
+                                 .sort((a,b) => a.episode - b.episode);
+
+        document.getElementById('episodes-title').innerText = `${seriesName} - T${season}`;
+        const grid = document.getElementById('episodesGrid');
+        if(episodes.length === 0) {
+            grid.innerHTML = `<p style="color:#666;">Nenhum episódio encontrado.</p>`;
+        } else {
+            const isPremium = temAcessoPremium();
+            grid.innerHTML = episodes.map((m, idx) => {
+                const isLocked = m.premiumOnly && !isPremium;
+                return `
+                    <div class="episode-card" onclick="${isLocked ? `document.getElementById('premium-warning-modal').style.display='flex'` : `abrirPlayerByMovie(m)`}">
+                        <h4>E${m.episode} - ${m.title}</h4>
+                        <p style="color:#888; font-size:11px;">${isLocked ? '🔒 Premium' : '▶️ Assistir'}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+        window._currentEpisodes = episodes;
+        showPage('page-episodes');
+    }
+
+    function abrirPlayerByMovie(movie) {
+        const list = window._currentEpisodes || [movie];
+        const index = list.findIndex(m => m.id === movie.id);
+        if(index === -1) {
+            abrirPlayer(0, [movie]);
+        } else {
+            abrirPlayer(index, list);
+        }
+    }
+
+    // ================================================================
+    //  NAVEGAÇÃO POR GRUPOS DE FILMES
+    // ================================================================
+    function openGroupMovies(groupName) {
+        const allMovies = getMovies();
+        const groupMovies = allMovies.filter(m => m.group === groupName)
+                                     .sort((a,b) => a.title.localeCompare(b.title));
+
+        document.getElementById('group-title').innerText = groupName;
+        const grid = document.getElementById('groupMoviesGrid');
+        if(groupMovies.length === 0) {
+            grid.innerHTML = `<p style="color:#666;">Nenhum filme neste grupo.</p>`;
+            return;
+        }
+        const isPremium = temAcessoPremium();
+        grid.innerHTML = groupMovies.map((m, idx) => {
+            const isLocked = m.premiumOnly && !isPremium;
+            return `
+                <div class="movie-card" onclick="${isLocked ? `document.getElementById('premium-warning-modal').style.display='flex'` : `abrirPlayer(${idx}, groupMovies)`}">
+                    <img src="${m.poster}" alt="${m.title}" loading="lazy" onerror="this.src='https://picsum.photos/seed/error/200/300'">
+                    ${isLocked ? `<div class="premium-overlay"><i class="fas fa-lock"></i><span>🔒 Premium</span></div>` : ''}
+                    <div class="info"><h4>${m.title}</h4></div>
+                </div>
+            `;
+        }).join('');
+        window._currentGroupMovies = groupMovies;
+        showPage('page-group-movies');
+    }
+
+    // ================================================================
+    //  ADMIN
     // ================================================================
     const ADMIN_PASSWORD = 'Beatriz2005$';
-
     let adminClicks = 0;
-    document.addEventListener('DOMContentLoaded', () => {
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializa o menu inferior como oculto
+        updateMenuVisibility();
+
+        // Mostra a página de login (sem auto-login)
+        showPage('page-login');
+
+        // Adiciona evento para abrir admin com 5 cliques no título
         const header = document.getElementById('header-title');
         if(header) {
-            header.addEventListener('click', () => {
+            header.addEventListener('click', function() {
                 adminClicks++;
                 if(adminClicks >= 5) {
                     adminClicks = 0;
-                    const senha = prompt('🔐 Digite a senha de administrador para aceder ao painel:');
+                    if (!isAdmin()) {
+                        alert('⚠️ Esta área é restrita a administradores.');
+                        return;
+                    }
+                    const senha = prompt('🔐 Digite a senha de administrador:');
                     if (senha === ADMIN_PASSWORD) {
                         document.getElementById('admin-panel').style.display = 'block';
                         loadAdminList();
+                        loadAdminUsersList();
                     } else if (senha !== null) {
                         alert('Senha incorreta!');
                     }
@@ -1398,22 +1798,76 @@
                 setTimeout(() => adminClicks = 0, 3000);
             });
         }
-        document.getElementById('wallet-label').innerText = document.getElementById('wallet-type').value;
+
+        // Adiciona eventos de clique aos itens do menu
+        document.querySelectorAll('.nav-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                const pageId = this.getAttribute('data-page');
+                if (pageId) {
+                    showPage(pageId);
+                }
+            });
+        });
+
+        // Carrega os planos (renderização inicial)
+        renderPlans();
     });
 
+    // ---- GESTÃO DE UTILIZADORES ----
+    function loadAdminUsersList() {
+        const container = document.getElementById('admin-users-list');
+        const users = getUsers();
+        if(users.length === 0) { container.innerHTML = '<p style="color:#666; font-size:12px;">Nenhum utilizador registado.</p>'; return; }
+        container.innerHTML = users.map(u => `
+            <div class="admin-user-item">
+                <span>${u.name} <small style="color:#888;">(${u.email})</small> ${u.isAdmin ? '⭐ Admin' : ''}</span>
+                ${!u.isAdmin ? `<button onclick="deleteUser('${u.id}')">🗑️</button>` : '<span style="color:#888; font-size:10px;">(Admin)</span>'}
+            </div>
+        `).join('');
+    }
+
+    function deleteUser(userId) {
+        if (!isAdmin()) return;
+        const senha = prompt('🔐 Confirme a senha de administrador para eliminar este utilizador:');
+        if (senha !== ADMIN_PASSWORD) {
+            alert('Senha incorreta! Operação cancelada.');
+            return;
+        }
+        let users = getUsers();
+        const userToDelete = users.find(u => u.id === userId);
+        if (!userToDelete) return;
+        if (userToDelete.isAdmin) {
+            alert('Não é possível eliminar o administrador principal.');
+            return;
+        }
+        users = users.filter(u => u.id !== userId);
+        saveUsers(users);
+        loadAdminUsersList();
+        loadAdminList();
+        renderHome();
+        renderCategories();
+        renderSeriesFilterHome();
+    }
+
+    // ---- GESTÃO DE FILMES ----
     function saveMovie() {
+        if (!isAdmin()) { alert('Apenas o administrador pode adicionar filmes.'); return; }
         const title = document.getElementById('movie-title').value.trim();
         const poster = document.getElementById('movie-poster').value.trim();
         const video = document.getElementById('movie-video').value.trim();
         const genre = document.getElementById('movie-genre').value;
         const country = document.getElementById('movie-country').value.trim() || 'Moçambique';
         const premiumOnly = document.getElementById('movie-premium').checked;
+        const series = document.getElementById('movie-series').value.trim();
+        const season = parseInt(document.getElementById('movie-season').value) || 0;
+        const episode = parseInt(document.getElementById('movie-episode').value) || 0;
+        const group = document.getElementById('movie-group').value.trim();
         if(!title || !poster || !video) {
             document.getElementById('admin-msg').innerHTML = '<span style="color:#e74c3c;">Preencha Título, Capa e Vídeo!</span>';
             return;
         }
         const current = JSON.parse(localStorage.getItem('moz_movies') || '[]');
-        current.push({ id: Date.now().toString(), title, poster, video, genre, country, premiumOnly });
+        current.push({ id: Date.now().toString(), title, poster, video, genre, country, premiumOnly, series, season, episode, group });
         localStorage.setItem('moz_movies', JSON.stringify(current));
         document.getElementById('admin-msg').innerHTML = '<span style="color:#00b894;">✅ Filme adicionado com sucesso!</span>';
         document.getElementById('movie-title').value = '';
@@ -1422,25 +1876,31 @@
         document.getElementById('movie-genre').value = 'Outro';
         document.getElementById('movie-country').value = '';
         document.getElementById('movie-premium').checked = false;
+        document.getElementById('movie-series').value = '';
+        document.getElementById('movie-season').value = '1';
+        document.getElementById('movie-episode').value = '1';
+        document.getElementById('movie-group').value = '';
         loadAdminList();
-        renderMovies();
+        renderHome();
         renderCategories();
+        renderSeriesFilterHome();
     }
 
     function loadAdminList() {
         const container = document.getElementById('admin-list');
         const movies = getMovies();
-        if(movies.length === 0) { container.innerHTML = '<p style="color:#666;">Nenhum filme cadastrado.</p>'; return; }
+        if(movies.length === 0) { container.innerHTML = '<p style="color:#666; font-size:12px;">Nenhum filme cadastrado.</p>'; return; }
         container.innerHTML = movies.map(m => `
             <div class="admin-movie-item">
-                <span>${m.title} <small style="color:#888;">(${m.genre} • ${m.country}) ${m.premiumOnly ? '🔒' : ''}</small></span>
+                <span>${m.title} <small style="color:#888;">(${m.genre} • ${m.country}) ${m.premiumOnly ? '🔒' : ''} ${m.series ? '📺'+m.series : ''} ${m.group ? '🎬'+m.group : ''}</small></span>
                 <button onclick="deleteMovie('${m.id}')">🗑️</button>
             </div>
         `).join('');
     }
 
     function deleteMovie(id) {
-        const senha = prompt('🔐 Confirme a senha para eliminar este filme:');
+        if (!isAdmin()) return;
+        const senha = prompt('🔐 Confirme a senha de administrador para eliminar este filme:');
         if (senha !== ADMIN_PASSWORD) {
             alert('Senha incorreta! Operação cancelada.');
             return;
@@ -1453,37 +1913,14 @@
         }
         localStorage.setItem('moz_movies', JSON.stringify(newMovies));
         loadAdminList();
-        renderMovies();
+        renderHome();
         renderCategories();
+        renderSeriesFilterHome();
     }
 
     // ================================================================
-    //  INICIALIZAÇÃO
+    //  FIM
     // ================================================================
-    (function init() {
-        const user = getCurrentUser();
-        if(user) {
-            checkPlanStatus();
-            showPage('page-home');
-            updateHomeBadge();
-            renderCategories();
-            renderMovies();
-            updateTitle();
-        } else {
-            showPage('page-login');
-        }
-        renderPlans();
-    })();
-
-    document.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter') {
-            const activePage = document.querySelector('.page.active');
-            if(activePage) {
-                if(activePage.id === 'page-login') handleLogin();
-                else if(activePage.id === 'page-register') handleRegister();
-            }
-        }
-    });
 </script>
 </body>
 </html>
