@@ -6,9 +6,15 @@
     <title>MOZFilmes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <link rel="manifest" href='data:application/json,{"name":"MOZFilmes","short_name":"MOZFilmes","start_url":".","display":"standalone","background_color":"#0a0a0a","theme_color":"#00b894","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 fill=%22%230a0a0a%22/%3E%3Ctext x=%2296%22 y=%22130%22 font-size=%2290%22 text-anchor=%22middle%22%3E🎬%3C/text%3E%3Ctext x=%2296%22 y=%22180%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22%2300b894%22%3EMOZ%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"},{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22%3E%3Crect width=%22512%22 height=%22512%22 fill=%22%230a0a0a%22/%3E%3Ctext x=%22256%22 y=%22350%22 font-size=%22240%22 text-anchor=%22middle%22%3E🎬%3C/text%3E%3Ctext x=%22256%22 y=%22480%22 font-size=%2280%22 text-anchor=%22middle%22 fill=%22%2300b894%22%3EMOZFilmes%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml"}]}'>
+    <!-- Video.js -->
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@videojs/http-streaming@3.12.0/dist/videojs-http-streaming.min.js"></script>
+
+    <link rel="manifest" href='data:application/json,{"name":"MOZFilmes","short_name":"MOZFilmes","start_url":".","display":"standalone","background_color":"#0a0a0a","theme_color":"#00b894","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 fill=%22%230a0a0a%22/%3E%3Ctext x=%2296%22 y=%22130%22 font-size=%2290%22 text-anchor=%22middle%22%3EðŸŽ¬%3C/text%3E%3Ctext x=%2296%22 y=%22180%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22%2300b894%22%3EMOZ%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"},{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22%3E%3Crect width=%22512%22 height=%22512%22 fill=%22%230a0a0a%22/%3E%3Ctext x=%22256%22 y=%22350%22 font-size=%22240%22 text-anchor=%22middle%22%3EðŸŽ¬%3C/text%3E%3Ctext x=%22256%22 y=%22480%22 font-size=%2280%22 text-anchor=%22middle%22 fill=%22%2300b894%22%3EMOZFilmes%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml"}]}'>
 
     <style>
+        /* ===== ESTILOS (mantidos) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -459,7 +465,6 @@
         }
         .status-badge.expired { background: #e74c3c; }
 
-        /* Menu inferior - oculto por padrão */
         .bottom-nav {
             position: absolute;
             bottom: 0;
@@ -472,9 +477,6 @@
             padding: 6px 0 8px;
             backdrop-filter: blur(10px);
             z-index: 99;
-        }
-        .bottom-nav.show {
-            display: flex;
         }
         .bottom-nav .nav-item {
             display: flex;
@@ -504,7 +506,7 @@
             overflow-y: auto;
         }
         #admin-panel h2 { color: #00b894; font-size: 18px; }
-        #admin-panel input, #admin-panel select {
+        #admin-panel input, #admin-panel select, #admin-panel textarea {
             width: 100%;
             padding: 8px 10px;
             margin: 5px 0;
@@ -574,6 +576,110 @@
         .admin-section { margin-top: 14px; }
         .admin-section h3 { color: #aaa; font-size: 14px; margin-bottom: 4px; border-bottom: 1px solid #2c2c2e; padding-bottom: 4px; }
 
+        /* === Upload areas organizadas === */
+        .upload-group {
+            background: #1c1c1e;
+            border-radius: 10px;
+            padding: 8px 10px;
+            margin: 6px 0;
+            border-left: 4px solid #555;
+        }
+        .upload-group.poster { border-left-color: #f1c40f; }
+        .upload-group.video  { border-left-color: #e74c3c; }
+        .upload-group.subtitle { border-left-color: #3498db; }
+
+        .upload-group .upload-label {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .upload-group .upload-label i { font-size: 16px; }
+        .upload-group .upload-label .badge-type {
+            background: #2c2c2e;
+            padding: 0 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #aaa;
+            margin-left: auto;
+        }
+        .file-upload-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin: 4px 0;
+            background: #0a0a0a;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px dashed #2c2c2e;
+        }
+        .file-upload-area input[type="file"] {
+            flex: 1;
+            min-width: 100px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            padding: 4px;
+            font-size: 12px;
+        }
+        .file-upload-area .file-name {
+            color: #00b894;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+        .file-upload-area .btn-upload {
+            background: #00b894;
+            border: none;
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .file-upload-area .btn-upload:active { transform: scale(0.95); }
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #2c2c2e;
+            border-radius: 4px;
+            margin: 4px 0 2px 0;
+            overflow: hidden;
+        }
+        .progress-bar-container .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #00b894;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            color: #aaa;
+            font-size: 10px;
+            margin-left: 4px;
+        }
+        .url-field {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #888;
+        }
+        .url-field input {
+            background: #0a0a0a;
+            border: 1px solid #2c2c2e;
+            border-radius: 6px;
+            padding: 4px 6px;
+            color: #fff;
+            width: 100%;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        /* ===== PLAYER MODAL MELHORADO ===== */
         #video-player-modal {
             display: none;
             position: fixed;
@@ -586,6 +692,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         #video-player-modal .close-btn {
             position: absolute;
@@ -594,40 +701,89 @@
             background: rgba(255,255,255,0.2);
             border: none;
             color: #fff;
-            font-size: 16px;
-            padding: 6px 10px;
+            font-size: 20px;
+            padding: 8px 12px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 1001;
+            backdrop-filter: blur(4px);
         }
         #video-player-modal .player-container {
             width: 100%;
-            max-height: 65vh;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             background: #000;
-            flex-shrink: 0;
+            flex: 1;
         }
         #video-player-modal .player-container video {
             width: 100%;
-            max-height: 65vh;
+            height: 100%;
             background: #000;
-        }
-        #video-player-modal .player-container iframe {
-            width: 100%;
-            height: 300px;
-            border: none;
+            object-fit: contain;
         }
         #video-player-modal .player-info {
-            padding: 12px 16px;
+            padding: 10px 16px;
             width: 100%;
-            max-width: 500px;
+            max-width: 100%;
             text-align: left;
+            background: rgba(0,0,0,0.8);
+            flex-shrink: 0;
             min-height: 50px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1001;
+            backdrop-filter: blur(8px);
         }
-        #video-player-modal .player-info h3 { color: #fff; font-size: 15px; margin-bottom: 2px; }
-        #video-player-modal .player-info p { color: #aaa; font-size: 12px; margin: 0; }
+        #video-player-modal .player-info h3 {
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #video-player-modal .player-info p {
+            color: #aaa;
+            font-size: 11px;
+            margin: 0;
+        }
+        /* Botão de tela cheia adicional para mobile */
+        #fullscreen-btn {
+            position: absolute;
+            bottom: 70px;
+            right: 16px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            padding: 10px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            backdrop-filter: blur(4px);
+        }
+        #fullscreen-btn:active { transform: scale(0.9); }
+
+        /* Video.js - ajustes para ocupar toda a tela */
+        .video-js {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .video-js .vjs-big-play-button {
+            background: #00b894;
+            border-radius: 50%;
+            border: none;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 30px;
+        }
+        .video-js .vjs-control-bar {
+            background: rgba(0,0,0,0.7);
+        }
 
         #premium-warning-modal {
             display: none;
@@ -704,6 +860,173 @@
         .about-content p { color: #aaa; font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
         .about-content ul { color: #aaa; font-size: 13px; padding-left: 20px; line-height: 1.8; }
         .about-content ul li { margin-bottom: 2px; }
+
+        .details-poster {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .details-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .details-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        .details-meta span { background: #1c1c1e; padding: 2px 10px; border-radius: 20px; }
+        .details-synopsis {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .details-section-title {
+            color: #aaa;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0 8px 0;
+            border-bottom: 1px solid #2c2c2e;
+            padding-bottom: 4px;
+        }
+        .cast-list {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 4px 0 12px 0;
+            scrollbar-width: none;
+        }
+        .cast-list::-webkit-scrollbar { display: none; }
+        .cast-item {
+            flex: 0 0 80px;
+            text-align: center;
+        }
+        .cast-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #2c2c2e;
+        }
+        .cast-item .name {
+            font-size: 11px;
+            color: #fff;
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cast-item .character {
+            font-size: 10px;
+            color: #888;
+        }
+        .trailer-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            margin-bottom: 12px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .trailer-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .recommendation-item {
+            background: #1c1c1e;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .recommendation-item:active { transform: scale(0.95); }
+        .recommendation-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .recommendation-item .title {
+            padding: 4px 6px;
+            font-size: 11px;
+            text-align: center;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .btn-watch {
+            background: #00b894;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0 12px 0;
+        }
+        .btn-watch:active { transform: scale(0.95); }
+
+        /* ===== RESPONSIVO PARA ROTAÇÃO ===== */
+        @media (max-width: 768px) {
+            #video-player-modal .player-container video {
+                object-fit: contain;
+            }
+            #fullscreen-btn {
+                bottom: 60px;
+                right: 12px;
+                font-size: 18px;
+                padding: 8px 10px;
+            }
+            .video-js .vjs-big-play-button {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                font-size: 24px;
+            }
+        }
+        @media (orientation: landscape) and (max-width: 900px) {
+            #video-player-modal .player-container {
+                height: 100%;
+            }
+            #video-player-modal .player-info {
+                padding: 6px 14px;
+                min-height: 40px;
+            }
+            #video-player-modal .player-info h3 {
+                font-size: 12px;
+            }
+            #video-player-modal .player-info p {
+                font-size: 10px;
+            }
+            #fullscreen-btn {
+                bottom: 50px;
+                right: 10px;
+                font-size: 16px;
+                padding: 6px 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -833,6 +1156,18 @@
         <div style="height:10px;"></div>
     </div>
 
+    <!-- DETALHES -->
+    <div id="page-details" class="page">
+        <div class="nav-header">
+            <button class="back-btn" onclick="showPage('page-home')"><i class="fas fa-arrow-left"></i></button>
+            <span class="title" id="details-title-page">Detalhes</span>
+        </div>
+        <div id="details-content">
+            <!-- Conteúdo preenchido dinamicamente -->
+        </div>
+        <div style="height:10px;"></div>
+    </div>
+
     <!-- PLANOS -->
     <div id="page-plans" class="page">
         <div class="app-header">
@@ -932,22 +1267,21 @@
         </div>
     </div>
 
-    <!-- MENU INFERIOR - inicialmente oculto -->
+    <!-- MENU INFERIOR -->
     <div class="bottom-nav" id="bottomNav">
         <button class="nav-item" data-page="page-home"><i class="fas fa-home"></i> Início</button>
         <button class="nav-item" data-page="page-plans"><i class="fas fa-tags"></i> Planos</button>
         <button class="nav-item" data-page="page-profile"><i class="fas fa-user"></i> Perfil</button>
     </div>
 
-    <!-- PLAYER -->
+    <!-- PLAYER (Video.js) MELHORADO -->
     <div id="video-player-modal">
         <button class="close-btn" onclick="fecharPlayer()"><i class="fas fa-times"></i></button>
+        <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i></button>
         <div class="player-container">
-            <video id="main-video" controls autoplay playsinline style="display:none; width:100%; max-height:65vh; background:#000;">
-                <source src="" type="video/mp4">
-                O teu navegador não suporta a reprodução de vídeos.
+            <video id="main-video" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="auto" style="max-height:100vh; height:100%;">
+                <p class="vjs-no-js">O seu navegador não suporta vídeos.</p>
             </video>
-            <iframe id="youtube-iframe" style="display:none; width:100%; height:300px; border:none;" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
         </div>
         <div class="player-info">
             <h3 id="player-video-title">Título</h3>
@@ -976,9 +1310,79 @@
         <h2><i class="fas fa-cog"></i> Painel de Controlo</h2>
         <div class="admin-section">
             <h3>📽️ Adicionar Filme / Série</h3>
+            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+                <input id="tmdb-search" placeholder="🔍 Buscar no TMDB (ex: Vingadores)" style="flex:1;" />
+                <button class="btn-primary" style="width:auto; padding:8px 16px;" onclick="searchTMDB()">Buscar</button>
+            </div>
+            <div id="tmdb-results" style="max-height:200px; overflow-y:auto; margin-bottom:8px; background:#1c1c1e; border-radius:8px; display:none;"></div>
+            
             <input id="movie-title" placeholder="Título" value="">
-            <input id="movie-poster" placeholder="URL da Capa" value="https://picsum.photos/seed/novo/200/300">
-            <input id="movie-video" placeholder="URL do Vídeo (MP4 ou YouTube)" value="https://www.w3schools.com/html/mov_bbb.mp4">
+            
+            <!-- ========== UPLOAD DA CAPA (POSTER) ========== -->
+            <div class="upload-group poster">
+                <div class="upload-label">
+                    <i class="fas fa-image" style="color:#f1c40f;"></i> Capa (imagem)
+                    <span class="badge-type">JPG, PNG, WebP</span>
+                </div>
+                <div class="file-upload-area">
+                    <input type="file" id="poster-file" accept="image/*" />
+                    <span class="file-name" id="poster-file-name">Nenhum ficheiro</span>
+                    <button class="btn-upload" onclick="uploadFileChunked('poster')"><i class="fas fa-upload"></i> Carregar</button>
+                </div>
+                <div id="poster-progress" style="display:none;">
+                    <div class="progress-bar-container"><div class="progress-bar" id="poster-progress-bar"></div></div>
+                    <span class="progress-text" id="poster-progress-text">0%</span>
+                </div>
+                <div class="url-field">
+                    <label>Ou URL da capa:</label>
+                    <input id="movie-poster" placeholder="https://exemplo.com/capa.jpg" value="">
+                </div>
+            </div>
+            
+            <textarea id="movie-synopsis" placeholder="Sinopse" rows="2" style="width:100%; background:#1c1c1e; border:1px solid #2c2c2e; border-radius:8px; color:#fff; padding:8px; margin:4px 0;"></textarea>
+            
+            <!-- ========== UPLOAD DO VÍDEO ========== -->
+            <div class="upload-group video">
+                <div class="upload-label">
+                    <i class="fas fa-film" style="color:#e74c3c;"></i> Vídeo
+                    <span class="badge-type">MP4, WebM, OGG, HLS (.m3u8)</span>
+                </div>
+                <div class="file-upload-area">
+                    <input type="file" id="video-file" accept="video/*,.mp4,.webm,.ogg,.m3u8" />
+                    <span class="file-name" id="video-file-name">Nenhum ficheiro</span>
+                    <button class="btn-upload" onclick="uploadFileChunked('video')"><i class="fas fa-upload"></i> Carregar</button>
+                </div>
+                <div id="video-progress" style="display:none;">
+                    <div class="progress-bar-container"><div class="progress-bar" id="video-progress-bar"></div></div>
+                    <span class="progress-text" id="video-progress-text">0%</span>
+                </div>
+                <div class="url-field">
+                    <label>Ou URL do vídeo:</label>
+                    <input id="movie-video" placeholder="https://exemplo.com/video.mp4" value="">
+                </div>
+            </div>
+            
+            <!-- ========== UPLOAD DA LEGENDA ========== -->
+            <div class="upload-group subtitle">
+                <div class="upload-label">
+                    <i class="fas fa-closed-captioning" style="color:#3498db;"></i> Legenda
+                    <span class="badge-type">.vtt ou .srt</span>
+                </div>
+                <div class="file-upload-area">
+                    <input type="file" id="subtitle-file" accept=".vtt,.srt" />
+                    <span class="file-name" id="subtitle-file-name">Nenhum ficheiro</span>
+                    <button class="btn-upload" onclick="uploadFileChunked('subtitle')"><i class="fas fa-upload"></i> Carregar</button>
+                </div>
+                <div id="subtitle-progress" style="display:none;">
+                    <div class="progress-bar-container"><div class="progress-bar" id="subtitle-progress-bar"></div></div>
+                    <span class="progress-text" id="subtitle-progress-text">0%</span>
+                </div>
+                <div class="url-field">
+                    <label>Ou URL da legenda:</label>
+                    <input id="movie-subtitle" placeholder="https://exemplo.com/legenda.vtt" value="">
+                </div>
+            </div>
+            
             <select id="movie-genre">
                 <option value="Ação">Ação</option>
                 <option value="Comédia">Comédia</option>
@@ -993,10 +1397,10 @@
                 <option value="Outro" selected>Outro</option>
             </select>
             <input id="movie-country" placeholder="País" value="Moçambique">
-            <input id="movie-series" placeholder="Nome da Série" value="">
-            <input id="movie-season" placeholder="Temporada" value="1" type="number">
-            <input id="movie-episode" placeholder="Episódio" value="1" type="number">
-            <input id="movie-group" placeholder="Grupo de Filmes" value="">
+            <input id="movie-series" placeholder="Nome da Série (se série)" value="">
+            <input id="movie-season" placeholder="Temporada (0 se filme)" value="0" type="number">
+            <input id="movie-episode" placeholder="Episódio (0 se filme)" value="0" type="number">
+            <input id="movie-group" placeholder="Grupo de Filmes (opcional)" value="">
             <div class="admin-checkbox">
                 <input type="checkbox" id="movie-premium">
                 <label for="movie-premium">🔒 Apenas Premium</label>
@@ -1016,6 +1420,229 @@
 </div>
 
 <script>
+    // ================================================================
+    //  CHAVE API TMDB
+    // ================================================================
+    const TMDB_API_KEY = 'c3ef13927210bf2422c39b65292a4e7c';
+    const TMDB_BASE = 'https://api.themoviedb.org/3';
+
+    // ================================================================
+    //  FUNÇÃO DE TELA CHEIA
+    // ================================================================
+    function toggleFullscreen() {
+        const modal = document.getElementById('video-player-modal');
+        if (!document.fullscreenElement) {
+            if (modal.requestFullscreen) {
+                modal.requestFullscreen();
+            } else if (modal.webkitRequestFullscreen) {
+                modal.webkitRequestFullscreen();
+            } else if (modal.msRequestFullscreen) {
+                modal.msRequestFullscreen();
+            }
+            // Forçar rotação para paisagem em dispositivos móveis
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+        }
+    }
+
+    // Detectar quando sair do fullscreen e desbloquear orientação
+    document.addEventListener('fullscreenchange', function() {
+        if (!document.fullscreenElement && screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
+    });
+
+    // ================================================================
+    //  INDEXEDDB - ARMAZENAMENTO DE CHUNKS
+    // ================================================================
+    const DB_NAME = 'MOZFilmesDB';
+    const DB_VERSION = 2;
+    const STORE_NAME = 'chunks';
+
+    let db = null;
+
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                }
+            };
+            request.onsuccess = (event) => {
+                db = event.target.result;
+                resolve(db);
+            };
+            request.onerror = (event) => {
+                reject(event.target.error);
+            };
+        });
+    }
+
+    async function saveChunkToDB(chunkId, blob) {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            const record = { id: chunkId, blob };
+            const request = store.put(record);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async function getChunkFromDB(chunkId) {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get(chunkId);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async function deleteChunksByPrefix(prefix) {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.openCursor();
+            let deleted = 0;
+            request.onsuccess = (event) => {
+                const cursor = event.target.result;
+                if (cursor) {
+                    if (cursor.key.startsWith(prefix)) {
+                        cursor.delete();
+                        deleted++;
+                    }
+                    cursor.continue();
+                } else {
+                    resolve(deleted);
+                }
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async function getAllChunksByPrefix(prefix) {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.openCursor();
+            const chunks = [];
+            request.onsuccess = (event) => {
+                const cursor = event.target.result;
+                if (cursor) {
+                    if (cursor.key.startsWith(prefix)) {
+                        chunks.push({ id: cursor.key, blob: cursor.value.blob });
+                    }
+                    cursor.continue();
+                } else {
+                    chunks.sort((a, b) => {
+                        const numA = parseInt(a.id.split('_chunk_')[1]);
+                        const numB = parseInt(b.id.split('_chunk_')[1]);
+                        return numA - numB;
+                    });
+                    resolve(chunks);
+                }
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // ================================================================
+    //  UPLOAD EM CHUNKS (organizado por tipo)
+    // ================================================================
+    const CHUNK_SIZE = 10 * 1024 * 1024; // 10 MB
+
+    async function uploadFileChunked(type) {
+        const fileInput = document.getElementById(type === 'poster' ? 'poster-file' : type === 'video' ? 'video-file' : 'subtitle-file');
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Selecione um ficheiro primeiro.');
+            return;
+        }
+
+        const progressContainer = document.getElementById(type + '-progress');
+        const progressBar = document.getElementById(type + '-progress-bar');
+        const progressText = document.getElementById(type + '-progress-text');
+        progressContainer.style.display = 'block';
+
+        const fileId = 'upload_' + Date.now() + '_' + type + '_' + file.name.replace(/[^a-zA-Z0-9]/g, '_');
+        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+        let uploadedChunks = 0;
+
+        try {
+            for (let i = 0; i < totalChunks; i++) {
+                const start = i * CHUNK_SIZE;
+                const end = Math.min(start + CHUNK_SIZE, file.size);
+                const chunk = file.slice(start, end);
+                const arrayBuffer = await chunk.arrayBuffer();
+                const blob = new Blob([arrayBuffer], { type: file.type });
+                const chunkId = fileId + '_chunk_' + i;
+                await saveChunkToDB(chunkId, blob);
+                uploadedChunks++;
+                const percent = Math.round((uploadedChunks / totalChunks) * 100);
+                progressBar.style.width = percent + '%';
+                progressText.innerText = percent + '% (' + uploadedChunks + '/' + totalChunks + ')';
+            }
+
+            const metaId = fileId + '_meta';
+            const meta = { totalChunks, mimeType: file.type, name: file.name };
+            await saveChunkToDB(metaId, new Blob([JSON.stringify(meta)], { type: 'application/json' }));
+
+            const urlField = document.getElementById(type === 'poster' ? 'movie-poster' : type === 'video' ? 'movie-video' : 'movie-subtitle');
+            urlField.value = '';
+            urlField.dataset.blobId = fileId;
+            urlField.dataset.totalChunks = totalChunks;
+            document.getElementById(type + '-file-name').innerText = file.name;
+            document.getElementById('admin-msg').innerHTML = `<span style="color:#00b894;">✅ ${file.name} carregado com sucesso (${totalChunks} chunks)!</span>`;
+        } catch (e) {
+            document.getElementById('admin-msg').innerHTML = `<span style="color:#e74c3c;">❌ Erro no upload: ${e.message}</span>`;
+        } finally {
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // ================================================================
+    //  RECUPERAR BLOB A PARTIR DOS CHUNKS
+    // ================================================================
+    async function getBlobFromChunks(fileId) {
+        const chunks = await getAllChunksByPrefix(fileId);
+        if (chunks.length === 0) return null;
+        const metaChunk = chunks.find(c => c.id.endsWith('_meta'));
+        let totalChunks = chunks.length - 1;
+        let mimeType = 'application/octet-stream';
+        let chunksWithoutMeta = chunks.filter(c => !c.id.endsWith('_meta'));
+        if (metaChunk) {
+            try {
+                const metaText = await metaChunk.blob.text();
+                const meta = JSON.parse(metaText);
+                totalChunks = meta.totalChunks;
+                mimeType = meta.mimeType || 'video/mp4';
+            } catch (e) {}
+        }
+        const blobs = chunksWithoutMeta.map(c => c.blob);
+        return new Blob(blobs, { type: mimeType });
+    }
+
     // ================================================================
     //  SERVICE WORKER (PWA)
     // ================================================================
@@ -1071,7 +1698,7 @@
     });
 
     // ================================================================
-    //  DADOS INICIAIS (FORÇA RECRIAÇÃO)
+    //  DADOS INICIAIS
     // ================================================================
     function initDatabase() {
         const defaultUsers = [
@@ -1092,21 +1719,21 @@
         }
 
         const defaultMovies = [
-            { id: 'd1', title: 'Winter is Coming', poster: 'https://picsum.photos/seed/got1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 1, group: '' },
-            { id: 'd2', title: 'The Kingsroad', poster: 'https://picsum.photos/seed/got2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 2, group: '' },
-            { id: 'd3', title: 'Lord Snow', poster: 'https://picsum.photos/seed/got3/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 3, group: '' },
-            { id: 'd4', title: 'The North Remembers', poster: 'https://picsum.photos/seed/got4/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 2, episode: 1, group: '' },
-            { id: 'd5', title: 'The Night Lands', poster: 'https://picsum.photos/seed/got5/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 2, episode: 2, group: '' },
-            { id: 'd6', title: 'Chapter One: The Vanishing', poster: 'https://picsum.photos/seed/st1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: false, series: 'Stranger Things', season: 1, episode: 1, group: '' },
-            { id: 'd7', title: 'Chapter Two: The Weirdo', poster: 'https://picsum.photos/seed/st2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: false, series: 'Stranger Things', season: 1, episode: 2, group: '' },
-            { id: 'd8', title: 'The Heirs of the Dragon', poster: 'https://picsum.photos/seed/hotd1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'A Casa do Dragão', season: 1, episode: 1, group: '' },
-            { id: 'd9', title: 'The Rogue Prince', poster: 'https://picsum.photos/seed/hotd2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'A Casa do Dragão', season: 1, episode: 2, group: '' },
-            { id: 'd10', title: 'O Predador (1987)', poster: 'https://picsum.photos/seed/pred1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador' },
-            { id: 'd11', title: 'O Predador 2 (1990)', poster: 'https://picsum.photos/seed/pred2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador' },
-            { id: 'd12', title: 'Predadores (2010)', poster: 'https://picsum.photos/seed/pred3/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador' },
-            { id: 'd13', title: 'Maputo Connection', poster: 'https://picsum.photos/seed/moz1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Ação', country: 'Moçambique', premiumOnly: false, series: '', season: 0, episode: 0, group: '' },
-            { id: 'd14', title: 'Xiconhoca', poster: 'https://picsum.photos/seed/moz2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Comédia', country: 'Moçambique', premiumOnly: false, series: '', season: 0, episode: 0, group: '' },
-            { id: 'd15', title: 'Naruto - O Filme', poster: 'https://picsum.photos/seed/anime1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', genre: 'Anime', country: 'Japão', premiumOnly: true, series: '', season: 0, episode: 0, group: '' }
+            { id: 'd1', title: 'Winter is Coming', poster: 'https://picsum.photos/seed/got1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 1, group: '', synopsis: '' },
+            { id: 'd2', title: 'The Kingsroad', poster: 'https://picsum.photos/seed/got2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 2, group: '', synopsis: '' },
+            { id: 'd3', title: 'Lord Snow', poster: 'https://picsum.photos/seed/got3/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 1, episode: 3, group: '', synopsis: '' },
+            { id: 'd4', title: 'The North Remembers', poster: 'https://picsum.photos/seed/got4/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 2, episode: 1, group: '', synopsis: '' },
+            { id: 'd5', title: 'The Night Lands', poster: 'https://picsum.photos/seed/got5/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'Game of Thrones', season: 2, episode: 2, group: '', synopsis: '' },
+            { id: 'd6', title: 'Chapter One: The Vanishing', poster: 'https://picsum.photos/seed/st1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: false, series: 'Stranger Things', season: 1, episode: 1, group: '', synopsis: '' },
+            { id: 'd7', title: 'Chapter Two: The Weirdo', poster: 'https://picsum.photos/seed/st2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: false, series: 'Stranger Things', season: 1, episode: 2, group: '', synopsis: '' },
+            { id: 'd8', title: 'The Heirs of the Dragon', poster: 'https://picsum.photos/seed/hotd1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'A Casa do Dragão', season: 1, episode: 1, group: '', synopsis: '' },
+            { id: 'd9', title: 'The Rogue Prince', poster: 'https://picsum.photos/seed/hotd2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Seriado', country: 'EUA', premiumOnly: true, series: 'A Casa do Dragão', season: 1, episode: 2, group: '', synopsis: '' },
+            { id: 'd10', title: 'O Predador (1987)', poster: 'https://picsum.photos/seed/pred1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador', synopsis: '' },
+            { id: 'd11', title: 'O Predador 2 (1990)', poster: 'https://picsum.photos/seed/pred2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador', synopsis: '' },
+            { id: 'd12', title: 'Predadores (2010)', poster: 'https://picsum.photos/seed/pred3/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Ação', country: 'EUA', premiumOnly: true, series: '', season: 0, episode: 0, group: 'O Predador', synopsis: '' },
+            { id: 'd13', title: 'Maputo Connection', poster: 'https://picsum.photos/seed/moz1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Ação', country: 'Moçambique', premiumOnly: false, series: '', season: 0, episode: 0, group: '', synopsis: '' },
+            { id: 'd14', title: 'Xiconhoca', poster: 'https://picsum.photos/seed/moz2/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Comédia', country: 'Moçambique', premiumOnly: false, series: '', season: 0, episode: 0, group: '', synopsis: '' },
+            { id: 'd15', title: 'Naruto - O Filme', poster: 'https://picsum.photos/seed/anime1/200/300', video: 'https://www.w3schools.com/html/mov_bbb.mp4', subtitle: '', blobId: null, subtitleBlobId: null, genre: 'Anime', country: 'Japão', premiumOnly: true, series: '', season: 0, episode: 0, group: '', synopsis: '' }
         ];
         if (!localStorage.getItem('moz_movies')) {
             localStorage.setItem('moz_movies', JSON.stringify(defaultMovies));
@@ -1115,29 +1742,20 @@
     initDatabase();
 
     // ================================================================
-    //  CONTROLO DO MENU (CORRIGIDO)
+    //  CONTROLO DO MENU
     // ================================================================
     function updateMenuVisibility() {
         const user = getCurrentUser();
         const bottomNav = document.getElementById('bottomNav');
-        const currentPage = document.querySelector('.page.active');
-        
         if (!bottomNav) return;
-
-        // Se estiver na página de login ou registo, oculta sempre
-        if (currentPage && (currentPage.id === 'page-login' || currentPage.id === 'page-register')) {
-            bottomNav.classList.remove('show');
-            console.log('Menu oculto (login/registo)');
-            return;
-        }
-
-        // Caso contrário, mostra apenas se houver utilizador logado
-        if (user) {
-            bottomNav.classList.add('show');
-            console.log('Menu visível (utilizador logado)');
+        const currentPage = document.querySelector('.page.active');
+        const isLoginOrRegister = currentPage && (currentPage.id === 'page-login' || currentPage.id === 'page-register');
+        if (isLoginOrRegister) {
+            bottomNav.style.display = 'none';
+        } else if (user) {
+            bottomNav.style.display = 'flex';
         } else {
-            bottomNav.classList.remove('show');
-            console.log('Menu oculto (sem utilizador)');
+            bottomNav.style.display = 'none';
         }
     }
 
@@ -1145,28 +1763,16 @@
     //  ROTAS E PÁGINAS
     // ================================================================
     function showPage(pageId) {
-        // Esconde todas as páginas
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        // Mostra a página alvo
         const target = document.getElementById(pageId);
-        if (target) {
-            target.classList.add('active');
-        } else {
-            console.error('Página não encontrada:', pageId);
-            return;
-        }
+        if (target) target.classList.add('active');
+        else return;
 
-        // Atualiza o item ativo no menu inferior
         document.querySelectorAll('.nav-item').forEach(item => {
             const itemPage = item.getAttribute('data-page');
-            if (itemPage === pageId) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
+            item.classList.toggle('active', itemPage === pageId);
         });
 
-        // Atualiza conteúdos específicos
         if (pageId === 'page-home') {
             updateHomeBadge();
             renderHome();
@@ -1177,9 +1783,7 @@
         if (pageId === 'page-plans') renderPlans();
         if (pageId === 'page-series-list') renderSeriesList();
 
-        // Mostra/oculta menu conforme login e página
         updateMenuVisibility();
-        // Volta ao topo
         target.scrollTop = 0;
     }
 
@@ -1374,17 +1978,18 @@
 
     function getMovies() {
         const saved = JSON.parse(localStorage.getItem('moz_movies') || '[]');
-        if (saved && saved.length > 0) {
-            return saved.map(m => ({ 
-                ...m, 
-                premiumOnly: m.premiumOnly || false, 
-                series: m.series || '', 
-                season: m.season || 0, 
-                episode: m.episode || 0,
-                group: m.group || ''
-            }));
-        }
-        return [];
+        return saved.map(m => ({ 
+            ...m, 
+            premiumOnly: m.premiumOnly || false, 
+            series: m.series || '', 
+            season: m.season || 0, 
+            episode: m.episode || 0,
+            group: m.group || '',
+            synopsis: m.synopsis || '',
+            subtitle: m.subtitle || '',
+            blobId: m.blobId || null,
+            subtitleBlobId: m.subtitleBlobId || null
+        }));
     }
 
     function getUniqueSeries(movies) {
@@ -1483,85 +2088,371 @@
     }
 
     // ================================================================
-    //  PLAYER
+    //  PLAYER (Video.js) MELHORADO
     // ================================================================
-    function abrirPlayer(index, list) {
+    let playerInstance = null;
+    let currentMovieId = null;
+
+    async function abrirPlayer(index, list) {
         const movie = list[index];
-        if (!movie) {
-            alert('Erro: filme não encontrado.');
-            return;
-        }
+        if (!movie) return;
         if (movie.premiumOnly && !temAcessoPremium()) {
             document.getElementById('premium-warning-modal').style.display = 'flex';
             return;
         }
-
-        const videoUrl = movie.video && movie.video.trim() !== '' ? movie.video.trim() : 'https://www.w3schools.com/html/mov_bbb.mp4';
-        
-        if (videoUrl.includes('drive.google.com') || videoUrl.includes('googleusercontent.com') || videoUrl.includes('drive.google')) {
-            alert('⚠️ O Google Drive bloqueia a reprodução de vídeos no MOZFilmes.\n\nUse um link do YouTube ou faça upload no Cloudinary/Streamable.');
-            return;
-        }
-
-        const isYouTube = videoUrl.includes('youtube.com/watch') || videoUrl.includes('youtu.be/');
-        
+        currentMovieId = movie.id;
         const modal = document.getElementById('video-player-modal');
         const videoEl = document.getElementById('main-video');
-        const iframeEl = document.getElementById('youtube-iframe');
         const titleEl = document.getElementById('player-video-title');
         const statusEl = document.getElementById('player-status-message');
 
-        videoEl.style.display = 'none';
-        iframeEl.style.display = 'none';
-        videoEl.pause();
-        videoEl.src = '';
-        iframeEl.src = '';
-
-        titleEl.innerText = movie.title;
-
-        if (isYouTube) {
-            let videoId = '';
-            if (videoUrl.includes('youtu.be/')) {
-                videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
-            } else {
-                videoId = videoUrl.split('v=')[1]?.split('&')[0] || '';
-            }
-            if (videoId) {
-                iframeEl.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-                iframeEl.style.display = 'block';
-                statusEl.innerHTML = `<i class="fab fa-youtube" style="color:#ff0000;"></i> A reproduzir via YouTube`;
-            } else {
-                statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Link do YouTube inválido.`;
-            }
-        } else {
-            videoEl.style.display = 'block';
-            videoEl.src = videoUrl;
-            videoEl.load();
-            statusEl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#f1c40f;"></i> A carregar...`;
-
-            videoEl.onloadeddata = function() {
-                statusEl.innerHTML = `<i class="fas fa-check-circle" style="color:#00b894;"></i> A transmitir...`;
-                videoEl.play().catch(e => console.log('Autoplay bloqueado:', e));
-            };
-
-            videoEl.onerror = function() {
-                statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Erro ao carregar o vídeo. Verifique o link.`;
-            };
+        if (playerInstance) {
+            playerInstance.dispose();
+            playerInstance = null;
         }
 
+        let videoUrl = null;
+        if (movie.blobId) {
+            const blob = await getBlobFromChunks(movie.blobId);
+            if (blob) {
+                videoUrl = URL.createObjectURL(blob);
+            }
+        }
+        if (!videoUrl && movie.video && movie.video.startsWith('http')) {
+            videoUrl = movie.video;
+        }
+        if (!videoUrl) {
+            videoUrl = 'https://www.w3schools.com/html/mov_bbb.mp4';
+        }
+
+        let type = 'video/mp4';
+        if (videoUrl.includes('.m3u8')) type = 'application/x-mpegURL';
+        else if (videoUrl.includes('.mpd')) type = 'application/dash+xml';
+        else if (videoUrl.includes('.webm')) type = 'video/webm';
+        else if (videoUrl.includes('.ogg')) type = 'video/ogg';
+
+        // Configurar o player para ocupar toda a tela
+        playerInstance = videojs(videoEl, {
+            controls: true,
+            autoplay: true,
+            preload: 'auto',
+            fluid: false,
+            fill: true,
+            html5: {
+                hls: {
+                    enableLowInitialPlaylist: true,
+                    smoothQualityChange: true,
+                }
+            },
+            sources: [{
+                src: videoUrl,
+                type: type
+            }]
+        });
+
+        let subtitleUrl = null;
+        if (movie.subtitleBlobId) {
+            const subBlob = await getBlobFromChunks(movie.subtitleBlobId);
+            if (subBlob) {
+                subtitleUrl = URL.createObjectURL(subBlob);
+            }
+        } else if (movie.subtitle && movie.subtitle.startsWith('http')) {
+            subtitleUrl = movie.subtitle;
+        }
+        if (subtitleUrl) {
+            playerInstance.ready(function() {
+                const track = new videojs.TextTrack({
+                    kind: 'subtitles',
+                    label: 'Português',
+                    srclang: 'pt',
+                    src: subtitleUrl,
+                    mode: 'showing'
+                });
+                playerInstance.addTextTrack(track);
+                setTimeout(() => {
+                    const tracks = playerInstance.textTracks();
+                    for (let i = 0; i < tracks.length; i++) {
+                        if (tracks[i].kind === 'subtitles') {
+                            tracks[i].mode = 'showing';
+                            break;
+                        }
+                    }
+                }, 1000);
+            });
+        }
+
+        const progressKey = `progress_${movie.id}`;
+        const savedTime = parseFloat(localStorage.getItem(progressKey)) || 0;
+        if (savedTime > 0) {
+            playerInstance.on('loadedmetadata', function() {
+                if (playerInstance) {
+                    playerInstance.currentTime(savedTime);
+                }
+            });
+        }
+
+        let saveInterval = setInterval(() => {
+            if (playerInstance && !playerInstance.paused()) {
+                const currentTime = playerInstance.currentTime();
+                if (currentTime > 0) {
+                    localStorage.setItem(progressKey, currentTime.toString());
+                }
+            }
+        }, 5000);
+
+        playerInstance.on('pause', function() {
+            const currentTime = playerInstance.currentTime();
+            if (currentTime > 0) {
+                localStorage.setItem(progressKey, currentTime.toString());
+            }
+        });
+        playerInstance.on('ended', function() {
+            localStorage.removeItem(progressKey);
+        });
+
+        playerInstance.on('error', function() {
+            statusEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Erro ao carregar o vídeo.`;
+            clearInterval(saveInterval);
+        });
+
+        playerInstance.on('loadedmetadata', function() {
+            statusEl.innerHTML = `<i class="fas fa-check-circle" style="color:#00b894;"></i> A transmitir... ${subtitleUrl ? '🔤 Legenda disponível' : ''}`;
+        });
+
+        titleEl.innerText = movie.title;
         modal.style.display = 'flex';
+
+        // Ajustar para ocupar toda a tela
+        setTimeout(() => {
+            if (playerInstance) {
+                playerInstance.fill(true);
+            }
+        }, 100);
+
+        playerInstance.on('dispose', function() {
+            clearInterval(saveInterval);
+        });
     }
 
     function fecharPlayer() {
-        const modal = document.getElementById('video-player-modal');
-        const videoEl = document.getElementById('main-video');
-        const iframeEl = document.getElementById('youtube-iframe');
-        videoEl.pause();
-        videoEl.src = '';
-        iframeEl.src = '';
-        videoEl.onerror = null;
-        videoEl.onloadeddata = null;
-        modal.style.display = 'none';
+        if (playerInstance) {
+            playerInstance.dispose();
+            playerInstance = null;
+        }
+        document.getElementById('video-player-modal').style.display = 'none';
+        currentMovieId = null;
+        // Sair do fullscreen se estiver ativo
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        }
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
+    }
+
+    // ================================================================
+    //  PÁGINA DE DETALHES
+    // ================================================================
+    async function openDetails(movie, list) {
+        if (movie.series && movie.series.trim() !== '' && movie.episode === 1 && movie.season === 1) {
+            openSeriesSeasons(movie.series);
+            return;
+        }
+        if (movie.group && movie.group.trim() !== '' && movie.episode === 0 && movie.season === 0) {
+            openGroupMovies(movie.group);
+            return;
+        }
+
+        const container = document.getElementById('details-content');
+        const titlePage = document.getElementById('details-title-page');
+        titlePage.innerText = movie.title;
+
+        let tmdbData = null;
+        try {
+            const searchResp = await fetch(`${TMDB_BASE}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(movie.title)}&language=pt-BR`);
+            const searchData = await searchResp.json();
+            if (searchData.results && searchData.results.length > 0) {
+                const first = searchData.results[0];
+                const type = first.media_type || 'movie';
+                const detailResp = await fetch(`${TMDB_BASE}/${type}/${first.id}?api_key=${TMDB_API_KEY}&language=pt-BR&append_to_response=credits,videos,recommendations`);
+                tmdbData = await detailResp.json();
+            }
+        } catch (e) {}
+
+        let html = `
+            <img src="${movie.poster}" alt="${movie.title}" class="details-poster" onerror="this.src='https://picsum.photos/seed/error/400/300'">
+            <div class="details-title">${movie.title}</div>
+            <div class="details-meta">
+                <span>${movie.genre || 'Género'}</span>
+                <span>${getFlagEmoji(movie.country)} ${movie.country || 'País'}</span>
+                ${tmdbData ? `<span>⭐ ${tmdbData.vote_average ? tmdbData.vote_average.toFixed(1) : 'N/A'}</span>` : ''}
+                ${movie.premiumOnly ? '<span style="color:#f1c40f;">🔒 Premium</span>' : '<span style="color:#00b894;">✅ Grátis</span>'}
+            </div>
+            <button class="btn-watch" onclick="abrirPlayer(${movieList.indexOf(movie)}, movieList)">
+                <i class="fas fa-play"></i> Assistir
+            </button>
+        `;
+
+        if (movie.synopsis) {
+            html += `<div class="details-synopsis">${movie.synopsis}</div>`;
+        } else if (tmdbData && tmdbData.overview) {
+            html += `<div class="details-synopsis">${tmdbData.overview}</div>`;
+        }
+
+        if (tmdbData && tmdbData.videos && tmdbData.videos.results) {
+            const trailer = tmdbData.videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+            if (trailer) {
+                html += `<div class="details-section-title">🎥 Trailer</div>
+                         <div class="trailer-container">
+                            <iframe src="https://www.youtube.com/embed/${trailer.key}" allowfullscreen></iframe>
+                         </div>`;
+            }
+        }
+
+        if (tmdbData && tmdbData.credits && tmdbData.credits.cast) {
+            const cast = tmdbData.credits.cast.slice(0, 10);
+            if (cast.length > 0) {
+                html += `<div class="details-section-title">🎭 Elenco Principal</div>
+                         <div class="cast-list">`;
+                cast.forEach(actor => {
+                    const photo = actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : 'https://picsum.photos/seed/actor/80/80';
+                    html += `
+                        <div class="cast-item">
+                            <img src="${photo}" alt="${actor.name}" onerror="this.src='https://picsum.photos/seed/actor/80/80'">
+                            <div class="name">${actor.name}</div>
+                            <div class="character">${actor.character || ''}</div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+        }
+
+        if (tmdbData && tmdbData.recommendations && tmdbData.recommendations.results) {
+            const recs = tmdbData.recommendations.results.slice(0, 6);
+            if (recs.length > 0) {
+                html += `<div class="details-section-title">📽️ Recomendações</div>
+                         <div class="recommendation-grid">`;
+                recs.forEach(rec => {
+                    const poster = rec.poster_path ? `https://image.tmdb.org/t/p/w185${rec.poster_path}` : 'https://picsum.photos/seed/rec/100/120';
+                    html += `
+                        <div class="recommendation-item" onclick="openRecommendation(${rec.id}, '${rec.media_type || 'movie'}')">
+                            <img src="${poster}" alt="${rec.title || rec.name}" onerror="this.src='https://picsum.photos/seed/rec/100/120'">
+                            <div class="title">${rec.title || rec.name}</div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+        }
+
+        container.innerHTML = html;
+        showPage('page-details');
+    }
+
+    async function openRecommendation(tmdbId, type) {
+        try {
+            const resp = await fetch(`${TMDB_BASE}/${type}/${tmdbId}?api_key=${TMDB_API_KEY}&language=pt-BR`);
+            const data = await resp.json();
+            const movie = {
+                id: 'rec_' + tmdbId,
+                title: data.title || data.name || 'Título',
+                poster: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : 'https://picsum.photos/seed/rec/200/300',
+                video: '',
+                genre: data.genres && data.genres.length > 0 ? data.genres[0].name : 'Desconhecido',
+                country: data.production_countries && data.production_countries.length > 0 ? data.production_countries[0].name : '',
+                premiumOnly: false,
+                series: '',
+                season: 0,
+                episode: 0,
+                group: '',
+                synopsis: data.overview || '',
+                subtitle: '',
+                blobId: null,
+                subtitleBlobId: null
+            };
+            const list = [movie];
+            window.movieList = list;
+            await openDetails(movie, list);
+        } catch (e) {
+            alert('Erro ao carregar recomendação.');
+        }
+    }
+
+    // ================================================================
+    //  TMDB INTEGRATION
+    // ================================================================
+    async function searchTMDB() {
+        const query = document.getElementById('tmdb-search').value.trim();
+        if (!query) return;
+        const resultsDiv = document.getElementById('tmdb-results');
+        try {
+            const response = await fetch(`${TMDB_BASE}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=pt-BR`);
+            const data = await response.json();
+            if (!data.results || data.results.length === 0) {
+                resultsDiv.innerHTML = '<p style="color:#888; padding:8px;">Nenhum resultado encontrado.</p>';
+                resultsDiv.style.display = 'block';
+                return;
+            }
+            resultsDiv.innerHTML = data.results.map(item => `
+                <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-bottom:1px solid #2c2c2e; cursor:pointer; background: ${item.media_type === 'tv' ? '#004d3d' : '#1c1c1e'};" onclick="selectTMDBItem(${item.id}, '${item.media_type}')">
+                    <img src="https://image.tmdb.org/t/p/w92${item.poster_path}" style="width:40px; height:60px; object-fit:cover; border-radius:4px;" onerror="this.style.display='none'">
+                    <div>
+                        <strong style="color:#fff;">${item.title || item.name}</strong>
+                        <span style="color:#888; font-size:11px;">${item.media_type === 'tv' ? '📺 Série' : '🎬 Filme'} ${item.release_date ? ' ('+item.release_date.split('-')[0]+')' : ''}</span>
+                    </div>
+                    <span style="margin-left:auto; color:#f1c40f;">⭐ ${item.vote_average?.toFixed(1) || 'N/A'}</span>
+                </div>
+            `).join('');
+            resultsDiv.style.display = 'block';
+        } catch (e) {
+            resultsDiv.innerHTML = '<p style="color:#e74c3c;">Erro ao buscar dados do TMDB.</p>';
+            resultsDiv.style.display = 'block';
+        }
+    }
+
+    async function selectTMDBItem(id, type) {
+        const resultsDiv = document.getElementById('tmdb-results');
+        resultsDiv.style.display = 'none';
+        try {
+            let endpoint = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
+            const response = await fetch(`${TMDB_BASE}${endpoint}?api_key=${TMDB_API_KEY}&language=pt-BR&append_to_response=credits,external_ids`);
+            const data = await response.json();
+            document.getElementById('movie-title').value = data.title || data.name || '';
+            document.getElementById('movie-poster').value = data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : '';
+            document.getElementById('movie-synopsis').value = data.overview || '';
+            if (data.genres && data.genres.length > 0) {
+                const genreName = data.genres[0].name;
+                const genreSelect = document.getElementById('movie-genre');
+                const options = genreSelect.options;
+                let found = false;
+                for (let opt of options) {
+                    if (opt.value === genreName) { opt.selected = true; found = true; break; }
+                }
+                if (!found) {
+                    const newOpt = document.createElement('option');
+                    newOpt.value = genreName;
+                    newOpt.text = genreName;
+                    genreSelect.add(newOpt);
+                    genreSelect.value = genreName;
+                }
+            }
+            if (data.production_countries && data.production_countries.length > 0) {
+                document.getElementById('movie-country').value = data.production_countries[0].name;
+            }
+            if (type === 'tv') {
+                document.getElementById('movie-series').value = data.name || '';
+                document.getElementById('movie-season').value = 1;
+                document.getElementById('movie-episode').value = 1;
+            } else {
+                document.getElementById('movie-series').value = '';
+                document.getElementById('movie-season').value = 0;
+                document.getElementById('movie-episode').value = 0;
+            }
+            document.getElementById('admin-msg').innerHTML = `<span style="color:#00b894;">✅ Dados importados do TMDB!</span>`;
+        } catch (e) {
+            document.getElementById('admin-msg').innerHTML = `<span style="color:#e74c3c;">❌ Erro ao buscar detalhes.</span>`;
+        }
     }
 
     // ================================================================
@@ -1615,7 +2506,7 @@
             const isSeries = m.series && m.series.trim() !== '';
             const hasGroup = m.group && m.group.trim() !== '';
 
-            let clickAction = `abrirPlayer(${index}, movieList)`;
+            let clickAction = `openDetails(movieList[${index}], movieList)`;
             if (isSeries && m.episode === 1 && m.season === 1) {
                 clickAction = `openSeriesSeasons('${m.series}')`;
             } else if (hasGroup && m.episode === 0 && m.season === 0) {
@@ -1770,13 +2661,9 @@
     let adminClicks = 0;
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Inicializa o menu inferior como oculto
         updateMenuVisibility();
-
-        // Mostra a página de login (sem auto-login)
         showPage('page-login');
 
-        // Adiciona evento para abrir admin com 5 cliques no título
         const header = document.getElementById('header-title');
         if(header) {
             header.addEventListener('click', function() {
@@ -1800,17 +2687,13 @@
             });
         }
 
-        // Adiciona eventos de clique aos itens do menu
         document.querySelectorAll('.nav-item').forEach(function(item) {
             item.addEventListener('click', function() {
                 const pageId = this.getAttribute('data-page');
-                if (pageId) {
-                    showPage(pageId);
-                }
+                if (pageId) showPage(pageId);
             });
         });
 
-        // Carrega os planos (renderização inicial)
         renderPlans();
     });
 
@@ -1854,8 +2737,9 @@
     function saveMovie() {
         if (!isAdmin()) { alert('Apenas o administrador pode adicionar filmes.'); return; }
         const title = document.getElementById('movie-title').value.trim();
-        const poster = document.getElementById('movie-poster').value.trim();
-        const video = document.getElementById('movie-video').value.trim();
+        let poster = document.getElementById('movie-poster').value.trim();
+        let video = document.getElementById('movie-video').value.trim();
+        let subtitle = document.getElementById('movie-subtitle').value.trim();
         const genre = document.getElementById('movie-genre').value;
         const country = document.getElementById('movie-country').value.trim() || 'Moçambique';
         const premiumOnly = document.getElementById('movie-premium').checked;
@@ -1863,24 +2747,104 @@
         const season = parseInt(document.getElementById('movie-season').value) || 0;
         const episode = parseInt(document.getElementById('movie-episode').value) || 0;
         const group = document.getElementById('movie-group').value.trim();
-        if(!title || !poster || !video) {
-            document.getElementById('admin-msg').innerHTML = '<span style="color:#e74c3c;">Preencha Título, Capa e Vídeo!</span>';
+        const synopsis = document.getElementById('movie-synopsis').value.trim();
+
+        let blobId = null;
+        let subtitleBlobId = null;
+        let posterBlobId = null;
+
+        const posterField = document.getElementById('movie-poster');
+        if (posterField.dataset.blobId) {
+            posterBlobId = posterField.dataset.blobId;
+        }
+
+        const videoField = document.getElementById('movie-video');
+        if (videoField.dataset.blobId) {
+            blobId = videoField.dataset.blobId;
+            video = '';
+        }
+
+        const subtitleField = document.getElementById('movie-subtitle');
+        if (subtitleField.dataset.blobId) {
+            subtitleBlobId = subtitleField.dataset.blobId;
+            subtitle = '';
+        }
+
+        if (!title) {
+            document.getElementById('admin-msg').innerHTML = '<span style="color:#e74c3c;">Preencha o Título!</span>';
             return;
         }
+        if (!poster && !posterBlobId) {
+            document.getElementById('admin-msg').innerHTML = '<span style="color:#e74c3c;">Forneça uma capa (URL ou upload)!</span>';
+            return;
+        }
+        if (!video && !blobId) {
+            document.getElementById('admin-msg').innerHTML = '<span style="color:#e74c3c;">Forneça um vídeo (URL ou upload)!</span>';
+            return;
+        }
+
+        if (posterBlobId && !poster) {
+            getBlobFromChunks(posterBlobId).then(blob => {
+                if (blob) {
+                    const url = URL.createObjectURL(blob);
+                    poster = url;
+                    saveMovieFinal(title, poster, video, subtitle, genre, country, premiumOnly, series, season, episode, group, synopsis, blobId, subtitleBlobId);
+                } else {
+                    document.getElementById('admin-msg').innerHTML = '<span style="color:#e74c3c;">Erro ao recuperar a capa carregada.</span>';
+                }
+            });
+            return;
+        }
+
+        saveMovieFinal(title, poster, video, subtitle, genre, country, premiumOnly, series, season, episode, group, synopsis, blobId, subtitleBlobId);
+    }
+
+    function saveMovieFinal(title, poster, video, subtitle, genre, country, premiumOnly, series, season, episode, group, synopsis, blobId, subtitleBlobId) {
         const current = JSON.parse(localStorage.getItem('moz_movies') || '[]');
-        current.push({ id: Date.now().toString(), title, poster, video, genre, country, premiumOnly, series, season, episode, group });
+        current.push({ 
+            id: Date.now().toString(), 
+            title, 
+            poster, 
+            video, 
+            subtitle, 
+            genre, 
+            country, 
+            premiumOnly, 
+            series, 
+            season, 
+            episode, 
+            group, 
+            synopsis,
+            blobId: blobId || null,
+            subtitleBlobId: subtitleBlobId || null
+        });
         localStorage.setItem('moz_movies', JSON.stringify(current));
         document.getElementById('admin-msg').innerHTML = '<span style="color:#00b894;">✅ Filme adicionado com sucesso!</span>';
+        // Limpar campos
         document.getElementById('movie-title').value = '';
         document.getElementById('movie-poster').value = '';
+        document.getElementById('movie-poster').dataset.blobId = '';
         document.getElementById('movie-video').value = '';
+        document.getElementById('movie-video').dataset.blobId = '';
+        document.getElementById('movie-subtitle').value = '';
+        document.getElementById('movie-subtitle').dataset.blobId = '';
+        document.getElementById('movie-synopsis').value = '';
         document.getElementById('movie-genre').value = 'Outro';
         document.getElementById('movie-country').value = '';
         document.getElementById('movie-premium').checked = false;
         document.getElementById('movie-series').value = '';
-        document.getElementById('movie-season').value = '1';
-        document.getElementById('movie-episode').value = '1';
+        document.getElementById('movie-season').value = '0';
+        document.getElementById('movie-episode').value = '0';
         document.getElementById('movie-group').value = '';
+        document.getElementById('poster-file-name').innerText = 'Nenhum ficheiro';
+        document.getElementById('video-file-name').innerText = 'Nenhum ficheiro';
+        document.getElementById('subtitle-file-name').innerText = 'Nenhum ficheiro';
+        document.getElementById('poster-file').value = '';
+        document.getElementById('video-file').value = '';
+        document.getElementById('subtitle-file').value = '';
+        document.getElementById('poster-progress').style.display = 'none';
+        document.getElementById('video-progress').style.display = 'none';
+        document.getElementById('subtitle-progress').style.display = 'none';
         loadAdminList();
         renderHome();
         renderCategories();
@@ -1893,13 +2857,13 @@
         if(movies.length === 0) { container.innerHTML = '<p style="color:#666; font-size:12px;">Nenhum filme cadastrado.</p>'; return; }
         container.innerHTML = movies.map(m => `
             <div class="admin-movie-item">
-                <span>${m.title} <small style="color:#888;">(${m.genre} • ${m.country}) ${m.premiumOnly ? '🔒' : ''} ${m.series ? '📺'+m.series : ''} ${m.group ? '🎬'+m.group : ''}</small></span>
+                <span>${m.title} <small style="color:#888;">(${m.genre} • ${m.country}) ${m.premiumOnly ? '🔒' : ''} ${m.series ? '📺'+m.series : ''} ${m.group ? '🎬'+m.group : ''} ${m.subtitle || m.subtitleBlobId ? '🔤 Legenda' : ''} ${m.blobId ? '📁 Local' : ''}</small></span>
                 <button onclick="deleteMovie('${m.id}')">🗑️</button>
             </div>
         `).join('');
     }
 
-    function deleteMovie(id) {
+    async function deleteMovie(id) {
         if (!isAdmin()) return;
         const senha = prompt('🔐 Confirme a senha de administrador para eliminar este filme:');
         if (senha !== ADMIN_PASSWORD) {
@@ -1907,21 +2871,25 @@
             return;
         }
         let movies = JSON.parse(localStorage.getItem('moz_movies') || '[]');
-        const newMovies = movies.filter(m => m.id !== id);
-        if (newMovies.length === movies.length) {
+        const movieToDelete = movies.find(m => m.id === id);
+        if (!movieToDelete) return;
+        if (movieToDelete.id.startsWith('d')) {
             alert('Este é um filme padrão. Não pode ser eliminado, mas pode adicionar os seus próprios.');
             return;
         }
+        if (movieToDelete.blobId) {
+            await deleteChunksByPrefix(movieToDelete.blobId);
+        }
+        if (movieToDelete.subtitleBlobId) {
+            await deleteChunksByPrefix(movieToDelete.subtitleBlobId);
+        }
+        const newMovies = movies.filter(m => m.id !== id);
         localStorage.setItem('moz_movies', JSON.stringify(newMovies));
         loadAdminList();
         renderHome();
         renderCategories();
         renderSeriesFilterHome();
     }
-
-    // ================================================================
-    //  FIM
-    // ================================================================
 </script>
 </body>
 </html>
